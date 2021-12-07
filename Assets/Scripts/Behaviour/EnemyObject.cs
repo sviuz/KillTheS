@@ -8,17 +8,15 @@ namespace Behaviour {
 
 		[SerializeField]private CircleCollider2D _circleCollider;
 		[SerializeField]private SpriteRenderer _exclamationPointSprite;
-		[SerializeField]private bool _patrolled = true;
-		[SerializeField]private Transform[] _patrollingPoints;
 
-		private bool isPatrolling = false;
+		private bool _isPatrolling = false;
 		
 		private void Awake() {
 			_circleCollider.radius = RadiusSearch > 0 ? RadiusSearch : 3.5f;
 		}
 
 		private void Start() {
-			isPatrolling = true;
+			_isPatrolling = true;
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -28,38 +26,39 @@ namespace Behaviour {
 		public void ShowWarning() {
 			_exclamationPointSprite.gameObject.SetActive(true);
 		}
-
-		private void PatrollingBetweenPoints(Transform pointA, Transform pointB) {
-			if (isPatrolling) {
-				
-			}
+		
+		public void HideWarning() {
+			_exclamationPointSprite.gameObject.SetActive(false);
 		}
+
+		
+		
 
 		#region Interface relization
 
 		public void Move(float values) {
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 		public void Attack() {
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 		public void Idle() {
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 		public void Hurt() {
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 		public void Death() {
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 		public void Jump() {
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 		public void CombatIdle() {
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 		public void Grounded() {
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		#endregion

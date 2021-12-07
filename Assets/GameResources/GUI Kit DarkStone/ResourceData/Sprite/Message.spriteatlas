@@ -17,10 +17,22 @@ SpriteAtlas:
       textureCompression: 0
       filterMode: 1
       generateMipMaps: 0
-      readable: 0
+      readable: 1
       crunchedCompression: 0
       sRGB: 1
-    platformSettings: []
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 2
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
       serializedVersion: 2
       padding: 4
@@ -28,15 +40,16 @@ SpriteAtlas:
       allowAlphaSplitting: 0
       enableRotation: 1
       enableTightPacking: 0
+    secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: b899e665450f14ec69646203f446178a, type: 3}
-    totalSpriteSurfaceArea: 118634
     bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: c159cd202a2624f488b76e1eabc053da, type: 3}
-  - {fileID: 21300000, guid: 2e01a6d0234cb43fcbe92cef21ed28ce, type: 3}
   - {fileID: 21300000, guid: df3e98f0f8e4f4d7cb5a7072513bedeb, type: 3}
   - {fileID: 21300000, guid: 58e62fe39feae4000b77f90fff13fcc7, type: 3}
   - {fileID: 21300000, guid: 21513874ad14045bfa5075e7997b9688, type: 3}
@@ -48,7 +61,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5324adef439074561a1a05d1521dabb7, type: 3}
   m_PackedSpriteNamesToIndex:
   - picture_blank
-  - message_count_bg
   - icon_postion_dim
   - picture2
   - title_icon_message
@@ -58,5 +70,6 @@ SpriteAtlas:
   - icon_life_default
   - icon_life_dim
   - message_frame_default
+  m_RenderDataMap: {}
   m_Tag: Message
   m_IsVariant: 0
