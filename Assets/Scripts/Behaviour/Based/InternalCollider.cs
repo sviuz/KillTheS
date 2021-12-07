@@ -20,7 +20,7 @@ namespace Behaviour.Based {
 			}
 		}
 
-		private void OnTriggerStay2D(Collider2D other) {
+		private void OnTriggerExit2D(Collider2D other) {
 			if (other.transform.CompareTag(Data.Tags.Player)) {
 				print("KEKA");
 			}

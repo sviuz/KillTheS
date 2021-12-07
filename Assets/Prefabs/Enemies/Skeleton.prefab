@@ -254,6 +254,8 @@ MonoBehaviour:
   RadiusSearch: 0
   _circleCollider: {fileID: 314274676298957393}
   _exclamationPointSprite: {fileID: 1572161590540672364}
+  _patrolled: 1
+  _patrollingPoints: []
 --- !u!1 &7843369141890374761
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,8 +266,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3321612095364397542}
   - component: {fileID: 314274676298957393}
+  - component: {fileID: 1353493021}
   m_Layer: 0
-  m_Name: Searching Object
+  m_Name: Internal Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -300,4 +303,17 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 2
+--- !u!114 &1353493021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7843369141890374761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce389b6ac406c5347b342a3ec31b3276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemy: {fileID: 7050300636522761207}
