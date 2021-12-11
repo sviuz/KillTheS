@@ -15,7 +15,6 @@
 			public string Recover = "Recover";
 		}
 		
-		
 		public struct Tags {
 			public static string Player = "Player";
 		}
