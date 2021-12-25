@@ -6,7 +6,5 @@
 		public void Hurt();
 		public void Death();
 		public void Jump();
-		public void CombatIdle();
-		public void Grounded();
 	}
 }

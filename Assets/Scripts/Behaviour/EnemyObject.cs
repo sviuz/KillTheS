@@ -1,26 +1,29 @@
 ﻿using System;
 using Behaviour.Based;
+using Core;
 using UnityEngine;
+using Zenject;
 
 namespace Behaviour {
-  public class EnemyObject : EnemyParameters, ISubjectBehaviour {
+  public class EnemyObject : EnemyParameters, IEnemyBehavior {
     [SerializeField]
     private CircleCollider2D _circleCollider;
     [SerializeField]
     private SpriteRenderer _exclamationPointSprite;
 
-    private bool _isPatrolling = false;
+    [Header("Patrol")]
+    [SerializeField]
+    private float _patrolSpeed;
+    [SerializeField]
+    private float _patrolPosition;
+    [SerializeField]
+    private Transform _patrolPoint;
+    [SerializeField]
+    private bool isMovingRight;
 
-    private void Awake() {
-      _circleCollider.radius = RadiusSearch > 0 ? RadiusSearch : 3.5f;
-    }
 
-    private void Start() {
-      _isPatrolling = true;
-    }
-
-    private void OnTriggerEnter(Collider other) {
-      print("JOPA");
+    private void Update() {
+      Patrol();
     }
 
     public void ShowWarning() {
@@ -41,7 +44,16 @@ namespace Behaviour {
     }
 
     public void Idle() {
-      throw new NotImplementedException();
+      if (transform.position.x > _patrolPoint.position.x + _patrolPosition) {
+        isMovingRight = false;
+      } else if (transform.position.x < _patrolPoint.position.x + _patrolPosition) {
+        isMovingRight = true;
+      }
+
+      var tr = (Vector2) transform.position;
+      transform.position = isMovingRight
+        ? new Vector2(tr.x + _patrolSpeed * Time.deltaTime, tr.y)
+        : new Vector2(tr.x - _patrolSpeed * Time.deltaTime, tr.y);
     }
 
     public void Hurt() {
@@ -56,13 +68,17 @@ namespace Behaviour {
       throw new NotImplementedException();
     }
 
-    public void CombatIdle() {
-      throw new NotImplementedException();
-    }
-
     public void Grounded() {
       throw new NotImplementedException();
     }
+
+    public void Patrol() {
+      if (Vector2.Distance(transform.position, _patrolPoint.position) < _patrolPosition) {
+        Idle();
+      }
+    }
+
+    public void Angry() { }
     #endregion
   }
 }
