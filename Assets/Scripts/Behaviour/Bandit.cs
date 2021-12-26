@@ -4,7 +4,7 @@ using static Other.Data.PLayerData;
 
 namespace Behaviour {
 	public class Bandit : MonoBehaviour,
-		ISubjectBehaviour {
+		IPlayerBehavior {
 		[SerializeField]private float _speed = 4.0f;
 		[SerializeField]private float _jumpForce = 7.5f;
 		[SerializeField]private Sensor_Bandit _groundSensor;
@@ -36,15 +36,15 @@ namespace Behaviour {
 			} else if (Input.GetMouseButtonDown(0)) {
 				Attack();
 			} else if (Input.GetKeyDown("f")) {
-				CombatIdle();
+				ChangeCombatPose();
 			} else if (Input.GetKeyDown("space") && _grounded) {
 				Jump();
 			} else if (Mathf.Abs(value) > Mathf.Epsilon) {
-				_animator.SetInteger(moveTriggers.AnimState, 2);
+				Move();
 			} else if (_combatIdle) {
-				_animator.SetInteger(moveTriggers.AnimState, 1);
+				CombatIdle();
 			} else {
-				_animator.SetInteger(moveTriggers.AnimState, 0);
+				Idle();
 			}
 		}
 
@@ -59,11 +59,15 @@ namespace Behaviour {
 
 			_animator.SetFloat(moveTriggers.AirSpeed, _body2d.velocity.y);
 		}
+
+		public void Move() {
+			_animator.SetInteger(moveTriggers.AnimState, 2);
+		}
 		public void Attack() {
 			_animator.SetTrigger(moveTriggers.Attack);
 		}
 		public void Idle() {
-			throw new System.NotImplementedException();
+			_animator.SetInteger(moveTriggers.AnimState, 0);
 		}
 		public void Hurt() {
 			_animator.SetTrigger(moveTriggers.Hurt);
@@ -80,6 +84,10 @@ namespace Behaviour {
 			_groundSensor.Disable(0.2f);
 		}
 		public void CombatIdle() {
+			_animator.SetInteger(moveTriggers.AnimState, 1);
+		}
+
+		public void ChangeCombatPose() {
 			_combatIdle = !_combatIdle;
 		}
 		public void Grounded() {

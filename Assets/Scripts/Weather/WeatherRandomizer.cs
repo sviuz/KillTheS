@@ -11,21 +11,5 @@ namespace Weather {
     private void Start() {
       var currentRainNumber = Randomizer.GetUniqueInt();
     }
-
-    /*private IEnumerator ChangeRainIntensity() {
-      var currentRainNumber = Randomizer.GetUniqueInt();
-    }
-    
-    private IEnumerator ChangeWindIntensity() {
-      
-    }
-    
-    private IEnumerator ChangeFogIntensity() {
-      
-    }
-    
-    private IEnumerator ChangeLightningIntensity() {
-      
-    }*/
   }
 }

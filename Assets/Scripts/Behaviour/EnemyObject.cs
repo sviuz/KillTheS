@@ -9,30 +9,12 @@ namespace Behaviour {
     private CircleCollider2D _circleCollider;
     [SerializeField]
     private SpriteRenderer _exclamationPointSprite;
-    
+
     [Header("Patrol")]
     [SerializeField]
-    private float _patrolSpeed;
+    private Transform _patrolCenter;
     [SerializeField]
-    private float _patrolPosition;
-    [SerializeField]
-    private Transform _patrolPoint;
-    [SerializeField]
-    private bool isMovingRight;
-    private float stopDistance;
-    
-    private GameManager _gameManager;
-
-    private void Update() {
-      Patrol();
-
-      if (Vector2.Distance(transform.position, _gameManager.GetPlayerPosition())<stopDistance) {
-        Attack();
-      }
-      if (Vector2.Distance(transform.position, _gameManager.GetPlayerPosition())>stopDistance) {
-        ReturnToPatrol();
-      }
-    }
+    private float _patrolRadius = 3f;
 
     public void ShowWarning() {
       _exclamationPointSprite.gameObject.SetActive(true);
@@ -51,18 +33,7 @@ namespace Behaviour {
       throw new NotImplementedException();
     }
 
-    public void Idle() {
-      if (transform.position.x > _patrolPoint.position.x + _patrolPosition) {
-        isMovingRight = false;
-      } else if (transform.position.x < _patrolPoint.position.x + _patrolPosition) {
-        isMovingRight = true;
-      }
-
-      var tr = (Vector2) transform.position;
-      transform.position = isMovingRight
-        ? new Vector2(tr.x + _patrolSpeed * Time.deltaTime, tr.y)
-        : new Vector2(tr.x - _patrolSpeed * Time.deltaTime, tr.y);
-    }
+    public void Idle() { }
 
     public void Hurt() {
       throw new NotImplementedException();
@@ -76,22 +47,10 @@ namespace Behaviour {
       throw new NotImplementedException();
     }
 
-    public void Grounded() {
-      throw new NotImplementedException();
-    }
+    public void Patrol() { }
 
-    public void Patrol() {
-      if (Vector2.Distance(transform.position, _patrolPoint.position) < _patrolPosition) {
-        Idle();
-      }
-    }
-
-    public void Angry() {
-      transform.position = Vector2.MoveTowards(transform.position, _gameManager.GetPlayerPosition(), SpeedPoints * Time.deltaTime);
-    }
-    public void ReturnToPatrol() {
-      transform.position = Vector2.MoveTowards(transform.position, _patrolPoint.position, SpeedPoints * Time.deltaTime);
-    }
+    public void Angry() { }
+    public void ReturnToPatrol() { }
     #endregion
   }
 }
