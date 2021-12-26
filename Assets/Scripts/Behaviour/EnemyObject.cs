@@ -1,26 +1,37 @@
 ﻿using System;
 using Behaviour.Based;
+using Core;
 using UnityEngine;
 
 namespace Behaviour {
-  public class EnemyObject : EnemyParameters, ISubjectBehaviour {
+  public class EnemyObject : EnemyParameters, IEnemyBehavior {
     [SerializeField]
     private CircleCollider2D _circleCollider;
     [SerializeField]
     private SpriteRenderer _exclamationPointSprite;
+    
+    [Header("Patrol")]
+    [SerializeField]
+    private float _patrolSpeed;
+    [SerializeField]
+    private float _patrolPosition;
+    [SerializeField]
+    private Transform _patrolPoint;
+    [SerializeField]
+    private bool isMovingRight;
+    private float stopDistance;
+    
+    private GameManager _gameManager;
 
-    private bool _isPatrolling = false;
+    private void Update() {
+      Patrol();
 
-    private void Awake() {
-      _circleCollider.radius = RadiusSearch > 0 ? RadiusSearch : 3.5f;
-    }
-
-    private void Start() {
-      _isPatrolling = true;
-    }
-
-    private void OnTriggerEnter(Collider other) {
-      print("JOPA");
+      if (Vector2.Distance(transform.position, _gameManager.GetPlayerPosition())<stopDistance) {
+        Attack();
+      }
+      if (Vector2.Distance(transform.position, _gameManager.GetPlayerPosition())>stopDistance) {
+        ReturnToPatrol();
+      }
     }
 
     public void ShowWarning() {
@@ -41,7 +52,16 @@ namespace Behaviour {
     }
 
     public void Idle() {
-      throw new NotImplementedException();
+      if (transform.position.x > _patrolPoint.position.x + _patrolPosition) {
+        isMovingRight = false;
+      } else if (transform.position.x < _patrolPoint.position.x + _patrolPosition) {
+        isMovingRight = true;
+      }
+
+      var tr = (Vector2) transform.position;
+      transform.position = isMovingRight
+        ? new Vector2(tr.x + _patrolSpeed * Time.deltaTime, tr.y)
+        : new Vector2(tr.x - _patrolSpeed * Time.deltaTime, tr.y);
     }
 
     public void Hurt() {
@@ -56,12 +76,21 @@ namespace Behaviour {
       throw new NotImplementedException();
     }
 
-    public void CombatIdle() {
+    public void Grounded() {
       throw new NotImplementedException();
     }
 
-    public void Grounded() {
-      throw new NotImplementedException();
+    public void Patrol() {
+      if (Vector2.Distance(transform.position, _patrolPoint.position) < _patrolPosition) {
+        Idle();
+      }
+    }
+
+    public void Angry() {
+      transform.position = Vector2.MoveTowards(transform.position, _gameManager.GetPlayerPosition(), SpeedPoints * Time.deltaTime);
+    }
+    public void ReturnToPatrol() {
+      transform.position = Vector2.MoveTowards(transform.position, _patrolPoint.position, SpeedPoints * Time.deltaTime);
     }
     #endregion
   }

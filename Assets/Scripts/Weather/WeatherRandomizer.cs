@@ -10,7 +10,6 @@ namespace Weather {
 
     private void Start() {
       var currentRainNumber = Randomizer.GetUniqueInt();
-      print(currentRainNumber);
     }
 
     /*private IEnumerator ChangeRainIntensity() {

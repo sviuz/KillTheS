@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,8 @@ namespace Ui.Panels {
     private Button _toSettings;
     [SerializeField]
     private Button _toAchievements;
+
+    private List<PanelModel> _panels;
 
     private void Start() {
       SubscribeButtons();

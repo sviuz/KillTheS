@@ -18,5 +18,11 @@
 		public struct Tags {
 			public static string Player = "Player";
 		}
+
+		public class EnemyState {
+			public bool IsIdle;
+			public bool IsAngry;
+			public bool IsReturnToPatrol;
+		}
 	}
 }
