@@ -2,7 +2,6 @@
 using Behaviour.Based;
 using Core;
 using UnityEngine;
-using Zenject;
 
 namespace Behaviour {
   public class EnemyObject : EnemyParameters, IEnemyBehavior {
@@ -10,7 +9,7 @@ namespace Behaviour {
     private CircleCollider2D _circleCollider;
     [SerializeField]
     private SpriteRenderer _exclamationPointSprite;
-
+    
     [Header("Patrol")]
     [SerializeField]
     private float _patrolSpeed;
@@ -20,10 +19,19 @@ namespace Behaviour {
     private Transform _patrolPoint;
     [SerializeField]
     private bool isMovingRight;
-
+    private float stopDistance;
+    
+    private GameManager _gameManager;
 
     private void Update() {
       Patrol();
+
+      if (Vector2.Distance(transform.position, _gameManager.GetPlayerPosition())<stopDistance) {
+        Attack();
+      }
+      if (Vector2.Distance(transform.position, _gameManager.GetPlayerPosition())>stopDistance) {
+        ReturnToPatrol();
+      }
     }
 
     public void ShowWarning() {
@@ -78,7 +86,12 @@ namespace Behaviour {
       }
     }
 
-    public void Angry() { }
+    public void Angry() {
+      transform.position = Vector2.MoveTowards(transform.position, _gameManager.GetPlayerPosition(), SpeedPoints * Time.deltaTime);
+    }
+    public void ReturnToPatrol() {
+      transform.position = Vector2.MoveTowards(transform.position, _patrolPoint.position, SpeedPoints * Time.deltaTime);
+    }
     #endregion
   }
 }

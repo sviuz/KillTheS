@@ -2,5 +2,6 @@
   public interface IEnemyBehavior: ISubjectBehaviour {
     public void Patrol();
     public void Angry();
+    public void ReturnToPatrol();
   }
 }

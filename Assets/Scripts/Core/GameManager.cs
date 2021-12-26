@@ -8,7 +8,7 @@ namespace Core {
     private GameObject Player;
 
     [Inject]
-    public Vector3 GetPlayerPosition() {
+    public Vector2 GetPlayerPosition() {
       if (Player) {
         return Player.transform.position;
       }
