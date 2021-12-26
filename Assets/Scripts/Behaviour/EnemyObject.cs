@@ -4,6 +4,7 @@ using Behaviour.Based;
 using Cinemachine.Utility;
 using DG.Tweening;
 using UnityEngine;
+using Zenject;
 
 namespace Behaviour {
   public class EnemyObject : EnemyParameters, IEnemyBehavior {
@@ -15,7 +16,7 @@ namespace Behaviour {
     private GameObject _exclamationPointSprite;
     [SerializeField]
     private Animator _animator;
-
+    
     [Header("Patrol")]
     private Vector2 _patrolLeft;
     private Vector2 _patrolRight;
@@ -28,6 +29,7 @@ namespace Behaviour {
       _patrolLeft = new Vector2(tr.x - _patrolRadius*2, tr.y);
       _patrolRight = new Vector2(tr.x, tr.y);
       SpeedPoints = 2f;
+      HealthPoints = 30;
       isPatrolling = true;
 
       if (!_animator) {
@@ -36,6 +38,14 @@ namespace Behaviour {
 
       if (!_spriteRenderer) {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+      }
+    }
+
+    public void GetDamage(int value) {
+      if (HealthPoints>=value) {
+        HealthPoints -= value;
+      } else {
+        Destroy(gameObject);
       }
     }
 
