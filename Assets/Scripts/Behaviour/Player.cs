@@ -18,9 +18,6 @@ namespace Behaviour {
     private float _attackRange = .5f;
     [SerializeField]
     private LayerMask _enemyLayerMask;
-
-    //1 - right, -1 - left
-    private int raycastDirection = 1;
     
     private Animator _animator;
     private Rigidbody2D _body2d;
@@ -44,7 +41,7 @@ namespace Behaviour {
       if (Input.GetKeyDown("e")) {
         Death();
       } else if (Input.GetKeyDown("q")) {
-        Hurt();
+        Hurt(0);
       } else if (Input.GetMouseButtonDown(0)) {
         Attack();
       } else if (Input.GetKeyDown("f")) {
@@ -63,10 +60,8 @@ namespace Behaviour {
     public void Move(float inputX) {
       if (inputX > 0) {
         transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
-        raycastDirection = -1;
       } else if (inputX < 0) {
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        raycastDirection = 1;
       }
 
       _body2d.velocity = new Vector2(inputX * _speed, _body2d.velocity.y);
@@ -85,30 +80,25 @@ namespace Behaviour {
 
     private void Hit() {
 
-      var enemy = Physics2D.OverlapCircle(_attackPoint.position, _attackRange, _enemyLayerMask);
+      Collider2D enemy = Physics2D.OverlapCircle(_attackPoint.position, _attackRange, _enemyLayerMask);
       if (enemy) {
         try {
           var e = enemy.GetComponent<EnemyObject>();
           if (e.IsAlive) {
-            e.GetDamage(10);
+            e.Hurt(10);
           }
         }
         catch (Exception e) {
           Console.WriteLine("Enemy is already dead.");
           throw;
         }
-        /*if (enemy.GetComponent<EnemyObject>()) {
-          if (enemy.GetComponent<EnemyObject>().IsAlive) {
-            enemy.GetComponent<EnemyObject>().GetDamage(10);
-          }
-        }*/
       }
     }
     public void Idle() {
       _animator.SetInteger(moveTriggers.AnimState, 0);
     }
 
-    public void Hurt() {
+    public void Hurt(int value) {
       _animator.SetTrigger(moveTriggers.Hurt);
     }
 

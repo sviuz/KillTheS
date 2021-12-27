@@ -11,8 +11,6 @@ namespace Behaviour {
     [SerializeField]
     private Rigidbody2D _rigidbody2D;
     [SerializeField]
-    private CircleCollider2D _circleCollider;
-    [SerializeField]
     private SpriteRenderer _spriteRenderer;
     [SerializeField]
     private Animator _animator;
@@ -75,21 +73,7 @@ namespace Behaviour {
       }
     }
 
-    public void GetDamage(int value) {
-      
-      print("GetDamage");
-      if (HealthPoints > value) {
-        _animator.SetTrigger("Damage");
-        HealthPoints -= value;
-      } else if (HealthPoints <= 0){
-        print("test1");
-        Death();
-      } else {
-        print("test2");
-        _animator.SetTrigger("Damage");
-        Invoke(nameof(Death), .3f);
-      }
-    }
+
 
     private void Start() {
       Patrol();
@@ -106,8 +90,19 @@ namespace Behaviour {
 
     public void Idle() { }
 
-    public void Hurt() {
-      throw new NotImplementedException();
+    public void Hurt(int value) {
+      print("GetDamage");
+      if (HealthPoints > value) {
+        _animator.SetTrigger("Damage");
+        HealthPoints -= value;
+      } else if (HealthPoints <= 0){
+        print("test1");
+        Death();
+      } else {
+        print("test2");
+        _animator.SetTrigger("Damage");
+        Invoke(nameof(Death), .3f);
+      }
     }
 
     public void Death() {
@@ -119,8 +114,10 @@ namespace Behaviour {
       _spriteRenderer.sprite = _deathSprite; 
       patrollingCoroutine.Kill();
       enabled = false;
+    }
+
+    private void SetHealth() {
       
-      // Destroy(gameObject);
     }
 
     public void Jump() {
@@ -152,8 +149,6 @@ namespace Behaviour {
     }
 
     public void Angry() { }
-
-    public void ReturnToPatrol() { }
     #endregion
   }
 }
