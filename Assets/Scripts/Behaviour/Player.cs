@@ -1,4 +1,5 @@
-﻿using Behaviour.Based;
+﻿using System;
+using Behaviour.Based;
 using UnityEngine;
 using static Other.Data.PLayerData;
 
@@ -37,12 +38,6 @@ namespace Behaviour {
       float inputX = Input.GetAxis("Horizontal");
       Move(inputX);
       MainBehaviour(inputX);
-      
-      
-      
-      Vector3 forward = transform. TransformDirection(Vector3. forward) * 30;
-      Debug. DrawRay(transform.position, _attackPoint.position, Color.green);
-
     }
 
     private void MainBehaviour(float value) {
@@ -84,16 +79,29 @@ namespace Behaviour {
     }
 
     public void Attack() {
-      print("ATTACK");
       _animator.SetTrigger(moveTriggers.Attack);
-      Invoke(nameof(Hit), .4f);
+      Invoke(nameof(Hit), .15f);
     }
 
     private void Hit() {
-      RaycastHit2D hit = Physics2D.Raycast(_attackPoint.position, Vector2.right, 5f);
 
-      if (hit.collider != null) {
-        print(hit.collider.name);
+      var enemy = Physics2D.OverlapCircle(_attackPoint.position, _attackRange, _enemyLayerMask);
+      if (enemy) {
+        try {
+          var e = enemy.GetComponent<EnemyObject>();
+          if (e.IsAlive) {
+            e.GetDamage(10);
+          }
+        }
+        catch (Exception e) {
+          Console.WriteLine("Enemy is already dead.");
+          throw;
+        }
+        /*if (enemy.GetComponent<EnemyObject>()) {
+          if (enemy.GetComponent<EnemyObject>().IsAlive) {
+            enemy.GetComponent<EnemyObject>().GetDamage(10);
+          }
+        }*/
       }
     }
     public void Idle() {

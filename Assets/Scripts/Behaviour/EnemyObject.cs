@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using Behaviour.Based;
-using Cinemachine.Utility;
 using DG.Tweening;
+using Other;
 using UnityEngine;
-using Zenject;
 
 namespace Behaviour {
   public class EnemyObject : EnemyParameters, IEnemyBehavior {
@@ -17,15 +15,17 @@ namespace Behaviour {
     [SerializeField]
     private SpriteRenderer _spriteRenderer;
     [SerializeField]
-    private GameObject _exclamationPointSprite;
-    [SerializeField]
     private Animator _animator;
-
+    [SerializeField]
+    private Sprite _deathSprite;
     private Vector2 _patrolLeft;
     private Vector2 _patrolRight;
     private float _patrolRadius = 3f;
     private Sequence patrollingCoroutine;
+    private bool isAlive = true;
 
+    public bool IsAlive => isAlive;
+    
     private void Awake() {
       var tr = transform.position;
       _patrolLeft = new Vector2(tr.x - _patrolRadius * 2, tr.y);
@@ -35,6 +35,26 @@ namespace Behaviour {
       isPatrolling = true;
 
       CheckForNull();
+    }
+
+    private void OnTriggerEnter2D(Collider2D col) {
+      if (col.CompareTag(Data.Tags.Player)) {
+        print("OnTriggerEnter2D");
+        if (isAlive) {
+          StopPatrolling();
+          _animator.Play("Idle");
+          Angry();
+        }
+      }
+    }
+
+    private void OnTriggerExit2D(Collider2D other) {
+      if (other.CompareTag(Data.Tags.Player)) {
+        print("OnTriggerExit2D");
+        if (isAlive) {
+          Patrol();
+        }
+      }
     }
 
     private void CheckForNull() {
@@ -56,30 +76,25 @@ namespace Behaviour {
     }
 
     public void GetDamage(int value) {
-      if (HealthPoints >= value) {
-        _animator.Play("Damage");
+      
+      print("GetDamage");
+      if (HealthPoints > value) {
+        _animator.SetTrigger("Damage");
         HealthPoints -= value;
+      } else if (HealthPoints <= 0){
+        print("test1");
+        Death();
       } else {
-        // print("Dead");
-        StopPatrolling();
-        _animator.Play("Death");
-        _boxCollider2D.enabled = false;
-        _rigidbody2D.bodyType = RigidbodyType2D.Static;
+        print("test2");
+        _animator.SetTrigger("Damage");
+        Invoke(nameof(Death), .3f);
       }
     }
 
     private void Start() {
       Patrol();
     }
-
-    public void ShowWarning() {
-      _exclamationPointSprite.SetActive(true);
-    }
-
-    public void HideWarning() {
-      _exclamationPointSprite.SetActive(false);
-    }
-
+    
     #region Interface relization
     public void Move(float values) {
       throw new NotImplementedException();
@@ -96,7 +111,16 @@ namespace Behaviour {
     }
 
     public void Death() {
-      throw new NotImplementedException();
+      isAlive = false;
+      StopPatrolling();
+      _animator.Play("Death");
+      _boxCollider2D.enabled = false;
+      _rigidbody2D.bodyType = RigidbodyType2D.Static;
+      _spriteRenderer.sprite = _deathSprite; 
+      patrollingCoroutine.Kill();
+      enabled = false;
+      
+      // Destroy(gameObject);
     }
 
     public void Jump() {
@@ -128,6 +152,7 @@ namespace Behaviour {
     }
 
     public void Angry() { }
+
     public void ReturnToPatrol() { }
     #endregion
   }
