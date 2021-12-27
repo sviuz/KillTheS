@@ -9,6 +9,10 @@ using Zenject;
 namespace Behaviour {
   public class EnemyObject : EnemyParameters, IEnemyBehavior {
     [SerializeField]
+    private BoxCollider2D _boxCollider2D;
+    [SerializeField]
+    private Rigidbody2D _rigidbody2D;
+    [SerializeField]
     private CircleCollider2D _circleCollider;
     [SerializeField]
     private SpriteRenderer _spriteRenderer;
@@ -16,22 +20,24 @@ namespace Behaviour {
     private GameObject _exclamationPointSprite;
     [SerializeField]
     private Animator _animator;
-    
-    [Header("Patrol")]
+
     private Vector2 _patrolLeft;
     private Vector2 _patrolRight;
     private float _patrolRadius = 3f;
     private Sequence patrollingCoroutine;
-    
-    
+
     private void Awake() {
       var tr = transform.position;
-      _patrolLeft = new Vector2(tr.x - _patrolRadius*2, tr.y);
+      _patrolLeft = new Vector2(tr.x - _patrolRadius * 2, tr.y);
       _patrolRight = new Vector2(tr.x, tr.y);
       SpeedPoints = 2f;
       HealthPoints = 30;
       isPatrolling = true;
 
+      CheckForNull();
+    }
+
+    private void CheckForNull() {
       if (!_animator) {
         _animator = GetComponent<Animator>();
       }
@@ -39,13 +45,26 @@ namespace Behaviour {
       if (!_spriteRenderer) {
         _spriteRenderer = GetComponent<SpriteRenderer>();
       }
+
+      if (!_boxCollider2D) {
+        _boxCollider2D = GetComponent<BoxCollider2D>();
+      }
+
+      if (!_rigidbody2D) {
+        _rigidbody2D = GetComponent<Rigidbody2D>();
+      }
     }
 
     public void GetDamage(int value) {
-      if (HealthPoints>=value) {
+      if (HealthPoints >= value) {
+        _animator.Play("Damage");
         HealthPoints -= value;
       } else {
-        Destroy(gameObject);
+        // print("Dead");
+        StopPatrolling();
+        _animator.Play("Death");
+        _boxCollider2D.enabled = false;
+        _rigidbody2D.bodyType = RigidbodyType2D.Static;
       }
     }
 
@@ -86,33 +105,28 @@ namespace Behaviour {
 
     public void StopPatrolling() {
       patrollingCoroutine.Kill();
-      _animator.Play("Idle");
     }
 
     public void Patrol() {
       var tr = transform.position;
-      _patrolLeft = new Vector2(tr.x - _patrolRadius*2, tr.y);
+      _patrolLeft = new Vector2(tr.x - _patrolRadius * 2, tr.y);
       _patrolRight = new Vector2(tr.x, tr.y);
       _spriteRenderer.flipX = true;
       patrollingCoroutine = DOTween.Sequence();
       patrollingCoroutine.AppendInterval(3f).Append(transform.DOMoveX(_patrolLeft.x, 3f).SetEase(Ease.Linear).OnStart(
-        () => {
-          _animator.Play("SkeletonRun");
-        }).OnComplete(() => {
-                        _animator.Play("Idle");
-                        _spriteRenderer.flipX = !_spriteRenderer.flipX;
-                      }));
+        () => { _animator.Play("SkeletonRun"); }).OnComplete(() => {
+                                                               _animator.Play("Idle");
+                                                               _spriteRenderer.flipX = !_spriteRenderer.flipX;
+                                                             }));
       patrollingCoroutine.AppendInterval(3f).Append(transform.DOMoveX(_patrolRight.x, 3f).SetEase(Ease.Linear).OnStart(
-        () => {
-          _animator.Play("SkeletonRun");
-        }).OnComplete(() => {
-                        _animator.Play("Idle");
-                        _spriteRenderer.flipX = !_spriteRenderer.flipX;
-                      }));
+        () => { _animator.Play("SkeletonRun"); }).OnComplete(() => {
+                                                               _animator.Play("Idle");
+                                                               _spriteRenderer.flipX = !_spriteRenderer.flipX;
+                                                             }));
       patrollingCoroutine.SetLoops(-1);
       patrollingCoroutine.Play();
     }
-    
+
     public void Angry() { }
     public void ReturnToPatrol() { }
     #endregion

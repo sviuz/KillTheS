@@ -17,6 +17,7 @@
 		
 		public struct Tags {
 			public static string Player = "Player";
+			public static string Enemy = "Enemy";
 		}
 		
 		public enum EnemyState {
