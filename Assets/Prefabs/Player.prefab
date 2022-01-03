@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 363191273}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Attack point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 363191272}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.23, y: 0.89, z: 0}
+  m_LocalPosition: {x: -0.82, y: 0.89, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9143592207856857754}
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 9149810715121962084}
   - component: {fileID: 9182221760414945228}
   - component: {fileID: 9092632081354086960}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GroundSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 9099232397935857372}
   - component: {fileID: 9091675078326612526}
   - component: {fileID: 1689865680778487}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -150,14 +150,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba8b435a8dc3f604e9a13c4acd7081c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 4
-  _jumpForce: 7.5
-  _groundSensor: {fileID: 9182221760414945228}
-  _attackPoint: {fileID: 363191273}
-  _attackRange: 0.5
-  _enemyLayerMask:
+  Health: 100
+  AttackPoints: 10
+  Speed: 5
+  isAlive: 0
+  AttackPosition: {fileID: 363191273}
+  AttackRange: 0.5
+  Mask:
     serializedVersion: 2
     m_Bits: 8
+  _jumpForce: 7.5
+  _groundSensor: {fileID: 9182221760414945228}
 --- !u!95 &9198391108515482386
 Animator:
   serializedVersion: 3

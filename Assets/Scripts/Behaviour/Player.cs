@@ -1,23 +1,15 @@
 ﻿using System;
 using Behaviour.Based;
 using UnityEngine;
-using static Other.Data.PLayerData;
+using static Other.Data.PlayerData;
 
 namespace Behaviour {
-  public class Player : MonoBehaviour,
+  public class Player : SubjectParameters,
     IPlayerBehavior {
-    [SerializeField]
-    private float _speed = 4.0f;
     [SerializeField]
     private float _jumpForce = 7.5f;
     [SerializeField]
     private Sensor_Bandit _groundSensor;
-    [SerializeField]
-    private Transform _attackPoint;
-    [SerializeField]
-    private float _attackRange = .5f;
-    [SerializeField]
-    private LayerMask _enemyLayerMask;
     
     private Animator _animator;
     private Rigidbody2D _body2d;
@@ -40,8 +32,6 @@ namespace Behaviour {
     private void MainBehaviour(float value) {
       if (Input.GetKeyDown("e")) {
         Death();
-      } else if (Input.GetKeyDown("q")) {
-        Hurt(0);
       } else if (Input.GetMouseButtonDown(0)) {
         Attack();
       } else if (Input.GetKeyDown("f")) {
@@ -64,7 +54,7 @@ namespace Behaviour {
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
       }
 
-      _body2d.velocity = new Vector2(inputX * _speed, _body2d.velocity.y);
+      _body2d.velocity = new Vector2(inputX * Speed, _body2d.velocity.y);
 
       _animator.SetFloat(moveTriggers.AirSpeed, _body2d.velocity.y);
     }
@@ -79,13 +69,12 @@ namespace Behaviour {
     }
 
     private void Hit() {
-
-      Collider2D enemy = Physics2D.OverlapCircle(_attackPoint.position, _attackRange, _enemyLayerMask);
+      Collider2D enemy = Physics2D.OverlapCircle(AttackPosition.position, AttackRange, Mask);
       if (enemy) {
         try {
           var e = enemy.GetComponent<EnemyObject>();
-          if (e.IsAlive) {
-            e.Hurt(10);
+          if (e.isAlive) {
+            e.Hurt(AttackPoints);
           }
         }
         catch (Exception e) {
@@ -100,6 +89,7 @@ namespace Behaviour {
 
     public void Hurt(int value) {
       _animator.SetTrigger(moveTriggers.Hurt);
+      
     }
 
     public void Death() {
@@ -119,11 +109,11 @@ namespace Behaviour {
       _animator.SetInteger(moveTriggers.AnimState, 1);
     }
 
-    public void ChangeCombatPose() {
+    private void ChangeCombatPose() {
       _combatIdle = !_combatIdle;
     }
 
-    public void Grounded() {
+    private void Grounded() {
       if (!_grounded && _groundSensor.State()) {
         _grounded = true;
         _animator.SetBool(moveTriggers.Grounded, _grounded);

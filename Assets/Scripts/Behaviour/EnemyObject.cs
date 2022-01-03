@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using Behaviour.Based;
 using DG.Tweening;
 using Other;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Behaviour {
   public class EnemyObject : EnemyParameters, IEnemyBehavior {
@@ -16,45 +18,30 @@ namespace Behaviour {
     private Animator _animator;
     [SerializeField]
     private Sprite _deathSprite;
+    [SerializeField]
+    private Slider _hpSlider;
+    
     private Vector2 _patrolLeft;
     private Vector2 _patrolRight;
     private float _patrolRadius = 3f;
     private Sequence patrollingCoroutine;
-    private bool isAlive = true;
-
-    public bool IsAlive => isAlive;
+    private Coroutine _attackCoroutine;
     
     private void Awake() {
       var tr = transform.position;
       _patrolLeft = new Vector2(tr.x - _patrolRadius * 2, tr.y);
       _patrolRight = new Vector2(tr.x, tr.y);
-      SpeedPoints = 2f;
-      HealthPoints = 30;
       isPatrolling = true;
+      _hpSlider.value = 100;
 
+     
       CheckForNull();
     }
-
-    private void OnTriggerEnter2D(Collider2D col) {
-      if (col.CompareTag(Data.Tags.Player)) {
-        print("OnTriggerEnter2D");
-        if (isAlive) {
-          StopPatrolling();
-          _animator.Play("Idle");
-          Angry();
-        }
-      }
+    
+    private void Start() {
+      Move();
     }
-
-    private void OnTriggerExit2D(Collider2D other) {
-      if (other.CompareTag(Data.Tags.Player)) {
-        print("OnTriggerExit2D");
-        if (isAlive) {
-          Patrol();
-        }
-      }
-    }
-
+    
     private void CheckForNull() {
       if (!_animator) {
         _animator = GetComponent<Animator>();
@@ -73,29 +60,72 @@ namespace Behaviour {
       }
     }
 
+    private void OnTriggerEnter2D(Collider2D col) {
+      if (!col.CompareTag(Data.Tags.Player))  return;
+      if (!isAlive) return;
 
-
-    private void Start() {
-      Patrol();
+      StopPatrolling();
+      _animator.Play("Idle");
+      Angry();
     }
-    
+
+    private void OnTriggerExit2D(Collider2D other) {
+      if (!other.CompareTag(Data.Tags.Player)) return;
+      if (!isAlive) return;
+
+      Move();
+    }
+
+    private void OnCollisionEnter2D(Collision2D col) {
+      if (col.transform.name == Data.Tags.Player) {
+        Attack();
+      }
+    }
+
+    private void OnCollisionExit2D(Collision2D other) {
+      StopCoroutine(_attackCoroutine);
+    }
+
     #region Interface relization
-    public void Move(float values) {
-      throw new NotImplementedException();
+    public void Move(float values = 0) {
+      if (isPatrolling) {
+        Patrol();
+      }
     }
 
     public void Attack() {
-      throw new NotImplementedException();
+      Collider2D enemy = Physics2D.OverlapCircle(AttackPosition.position, AttackRange, Mask);
+      if (!enemy) return;
+
+      _attackCoroutine = StartCoroutine(AttackCoroutine(enemy));
     }
 
+    private IEnumerator AttackCoroutine(Collider2D collider) {
+      while (true) {
+        try {
+          var e = collider.GetComponent<Player>();
+          if (e.isAlive) {
+            e.Hurt(AttackPoints);
+            _animator.Play("Attack");
+          }
+        }
+        catch (Exception e) {
+          Console.WriteLine("Player is already dead.");
+          throw;
+        }
+
+        yield return new WaitForSeconds(1f);
+      }
+    }
+    
     public void Idle() { }
 
     public void Hurt(int value) {
-      print("GetDamage");
-      if (HealthPoints > value) {
+      print("HURT");
+      if (Health > value) {
         _animator.SetTrigger("Damage");
-        HealthPoints -= value;
-      } else if (HealthPoints <= 0){
+        Health -= value;
+      } else if (Health <= 0){
         print("test1");
         Death();
       } else {
@@ -116,7 +146,7 @@ namespace Behaviour {
       enabled = false;
     }
 
-    private void SetHealth() {
+    private void SetHP() {
       
     }
 

@@ -1,7 +1,14 @@
-﻿namespace Other {
+﻿using Behaviour;
+
+namespace Other {
 	public static class Data {
-		public static class PLayerData {
+		public static class PlayerData {
 			public static MoveTriggers moveTriggers = new MoveTriggers();
+		}
+		
+		public enum EnemyType {
+			Skeleton,
+			Wizard
 		}
 		
 		public class MoveTriggers {
