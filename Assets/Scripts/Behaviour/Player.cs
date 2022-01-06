@@ -13,13 +13,19 @@ namespace Behaviour {
     
     private Animator _animator;
     private Rigidbody2D _body2d;
+    private BoxCollider2D _boxCollider;    
+    
     private bool _grounded;
     private bool _combatIdle;
     private bool _isDead;
+    
+    private Vector2 _defaultBoxColliderX = new Vector2(0.8f, 1.5f);
+    private Vector2 _defendedBoxColliderX = new Vector2(2f, 1.5f);
 
-    private void Start() {
+    private void Awake() {
       _animator = GetComponent<Animator>();
       _body2d = GetComponent<Rigidbody2D>();
+      _boxCollider = GetComponent<BoxCollider2D>();
     }
 
     private void Update() {
@@ -34,7 +40,7 @@ namespace Behaviour {
         Death();
       } else if (Input.GetMouseButtonDown(0)) {
         Attack();
-      } else if (Input.GetKeyDown("f")) {
+      } else if (Input.GetKeyDown(KeyCode.Mouse1)) {
         ChangeCombatPose();
       } else if (Input.GetKeyDown("space") && _grounded) {
         Jump();
@@ -111,6 +117,7 @@ namespace Behaviour {
 
     private void ChangeCombatPose() {
       _combatIdle = !_combatIdle;
+      _boxCollider.size = _combatIdle ? _defendedBoxColliderX : _defaultBoxColliderX;
     }
 
     private void Grounded() {

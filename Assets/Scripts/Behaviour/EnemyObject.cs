@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Threading.Tasks;
 using Behaviour.Based;
 using DG.Tweening;
 using Other;
@@ -28,20 +29,13 @@ namespace Behaviour {
     private Coroutine _attackCoroutine;
     
     private void Awake() {
-      var tr = transform.position;
-      _patrolLeft = new Vector2(tr.x - _patrolRadius * 2, tr.y);
-      _patrolRight = new Vector2(tr.x, tr.y);
-      isPatrolling = true;
-      _hpSlider.value = 100;
-
-     
       CheckForNull();
     }
     
     private void Start() {
       Move();
     }
-    
+
     private void CheckForNull() {
       if (!_animator) {
         _animator = GetComponent<Animator>();
@@ -61,7 +55,7 @@ namespace Behaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D col) {
-      if (!col.CompareTag(Data.Tags.Player))  return;
+      if (!col.CompareTag(Data.Tags.Player)) return;
       if (!isAlive) return;
 
       StopPatrolling();
@@ -72,18 +66,20 @@ namespace Behaviour {
     private void OnTriggerExit2D(Collider2D other) {
       if (!other.CompareTag(Data.Tags.Player)) return;
       if (!isAlive) return;
-
+      
       Move();
     }
 
     private void OnCollisionEnter2D(Collision2D col) {
-      if (col.transform.name == Data.Tags.Player) {
-        Attack();
-      }
+      if (col.transform.name != Data.Tags.Player) return;
+      if (!isAlive) return;
+      
+      Attack();
     }
 
     private void OnCollisionExit2D(Collision2D other) {
       StopCoroutine(_attackCoroutine);
+      Move();
     }
 
     #region Interface relization
@@ -101,13 +97,14 @@ namespace Behaviour {
     }
 
     private IEnumerator AttackCoroutine(Collider2D collider) {
+      isPatrolling = false;
       while (true) {
         try {
           var e = collider.GetComponent<Player>();
-          if (e.isAlive) {
-            e.Hurt(AttackPoints);
-            _animator.Play("Attack");
-          }
+          if (e.isAlive) yield break;
+          
+          e.Hurt(AttackPoints);
+          _animator.Play("Attack");
         }
         catch (Exception e) {
           Console.WriteLine("Player is already dead.");
@@ -122,16 +119,13 @@ namespace Behaviour {
 
     public void Hurt(int value) {
       print("HURT");
+      Health -= value;
+      _animator.SetTrigger("Damage");
+      
+      
       if (Health > value) {
         _animator.SetTrigger("Damage");
-        Health -= value;
-      } else if (Health <= 0){
-        print("test1");
-        Death();
-      } else {
-        print("test2");
-        _animator.SetTrigger("Damage");
-        Invoke(nameof(Death), .3f);
+        Invoke(nameof(Death), .3f); 
       }
     }
 
@@ -159,6 +153,8 @@ namespace Behaviour {
     }
 
     public void Patrol() {
+      if (isPatrolling) return;
+      
       var tr = transform.position;
       _patrolLeft = new Vector2(tr.x - _patrolRadius * 2, tr.y);
       _patrolRight = new Vector2(tr.x, tr.y);
