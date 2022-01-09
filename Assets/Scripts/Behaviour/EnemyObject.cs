@@ -55,19 +55,19 @@ namespace Behaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D col) {
-      if (!col.CompareTag(Data.Tags.Player)) return;
+      /*if (!col.CompareTag(Data.Tags.Player)) return;
       if (!isAlive) return;
 
       StopPatrolling();
       _animator.Play("Idle");
-      Angry();
+      Angry();*/
     }
 
     private void OnTriggerExit2D(Collider2D other) {
-      if (!other.CompareTag(Data.Tags.Player)) return;
+      /*if (!other.CompareTag(Data.Tags.Player)) return;
       if (!isAlive) return;
       
-      Move();
+      Move();*/
     }
 
     private void OnCollisionEnter2D(Collision2D col) {
