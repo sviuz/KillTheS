@@ -78,7 +78,11 @@ namespace Behaviour {
     }
 
     private void OnCollisionExit2D(Collision2D other) {
-      StopCoroutine(_attackCoroutine);
+      if (_attackCoroutine!=null) {
+        StopCoroutine(_attackCoroutine);
+      }
+
+      isPatrolling = true;
       Move();
     }
 
@@ -101,7 +105,7 @@ namespace Behaviour {
       while (true) {
         try {
           var e = collider.GetComponent<Player>();
-          if (e.isAlive) yield break;
+          if (!e.isAlive) yield break;
           
           e.Hurt(AttackPoints);
           _animator.Play("Attack");
@@ -121,10 +125,12 @@ namespace Behaviour {
       print("HURT");
       Health -= value;
       _animator.SetTrigger("Damage");
+      DOSetHp();
       
-      
-      if (Health > value) {
+      if (Health < value) {
         _animator.SetTrigger("Damage");
+        Health = 0;
+        DOSetHp();
         Invoke(nameof(Death), .3f); 
       }
     }
@@ -140,20 +146,18 @@ namespace Behaviour {
       enabled = false;
     }
 
-    private void SetHP() {
-      
+    private void DOSetHp() {
+      _hpSlider.value = Health;
     }
 
-    public void Jump() {
-      throw new NotImplementedException();
-    }
+    public void Jump() { }
 
     public void StopPatrolling() {
       patrollingCoroutine.Kill();
     }
 
     public void Patrol() {
-      if (isPatrolling) return;
+      if (!isPatrolling) return;
       
       var tr = transform.position;
       _patrolLeft = new Vector2(tr.x - _patrolRadius * 2, tr.y);
