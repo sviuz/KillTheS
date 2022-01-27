@@ -111,8 +111,7 @@ namespace Behaviour {
           _animator.Play("Attack");
         }
         catch (Exception e) {
-          Console.WriteLine("Player is already dead.");
-          throw;
+          throw new Exception("Player is already dead.");
         }
 
         yield return new WaitForSeconds(1f);
