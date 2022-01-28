@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Threading.Tasks;
 using Behaviour.Based;
 using DG.Tweening;
 using Other;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Behaviour {
   public class EnemyObject : EnemyParameters, IEnemyBehavior {
@@ -11,50 +14,26 @@ namespace Behaviour {
     [SerializeField]
     private Rigidbody2D _rigidbody2D;
     [SerializeField]
-    private CircleCollider2D _circleCollider;
-    [SerializeField]
     private SpriteRenderer _spriteRenderer;
     [SerializeField]
     private Animator _animator;
     [SerializeField]
     private Sprite _deathSprite;
+    [SerializeField]
+    private Slider _hpSlider;
+    
     private Vector2 _patrolLeft;
     private Vector2 _patrolRight;
     private float _patrolRadius = 3f;
     private Sequence patrollingCoroutine;
-    private bool isAlive = true;
-
-    public bool IsAlive => isAlive;
+    private Coroutine _attackCoroutine;
     
     private void Awake() {
-      var tr = transform.position;
-      _patrolLeft = new Vector2(tr.x - _patrolRadius * 2, tr.y);
-      _patrolRight = new Vector2(tr.x, tr.y);
-      SpeedPoints = 2f;
-      HealthPoints = 30;
-      isPatrolling = true;
-
       CheckForNull();
     }
-
-    private void OnTriggerEnter2D(Collider2D col) {
-      if (col.CompareTag(Data.Tags.Player)) {
-        print("OnTriggerEnter2D");
-        if (isAlive) {
-          StopPatrolling();
-          _animator.Play("Idle");
-          Angry();
-        }
-      }
-    }
-
-    private void OnTriggerExit2D(Collider2D other) {
-      if (other.CompareTag(Data.Tags.Player)) {
-        print("OnTriggerExit2D");
-        if (isAlive) {
-          Patrol();
-        }
-      }
+    
+    private void Start() {
+      Move();
     }
 
     private void CheckForNull() {
@@ -75,39 +54,84 @@ namespace Behaviour {
       }
     }
 
-    public void GetDamage(int value) {
+    private void OnTriggerEnter2D(Collider2D col) {
+      /*if (!col.CompareTag(Data.Tags.Player)) return;
+      if (!isAlive) return;
+
+      StopPatrolling();
+      _animator.Play("Idle");
+      Angry();*/
+    }
+
+    private void OnTriggerExit2D(Collider2D other) {
+      /*if (!other.CompareTag(Data.Tags.Player)) return;
+      if (!isAlive) return;
       
-      print("GetDamage");
-      if (HealthPoints > value) {
-        _animator.SetTrigger("Damage");
-        HealthPoints -= value;
-      } else if (HealthPoints <= 0){
-        print("test1");
-        Death();
-      } else {
-        print("test2");
-        _animator.SetTrigger("Damage");
-        Invoke(nameof(Death), .3f);
+      Move();*/
+    }
+
+    private void OnCollisionEnter2D(Collision2D col) {
+      if (col.transform.name != Data.Tags.Player) return;
+      if (!isAlive) return;
+      
+      Attack();
+    }
+
+    private void OnCollisionExit2D(Collision2D other) {
+      if (_attackCoroutine!=null) {
+        StopCoroutine(_attackCoroutine);
+      }
+
+      isPatrolling = true;
+      Move();
+    }
+
+    #region Interface relization
+    public void Move(float values = 0) {
+      if (isPatrolling) {
+        Patrol();
       }
     }
 
-    private void Start() {
-      Patrol();
+    public void Attack() {
+      Collider2D enemy = Physics2D.OverlapCircle(AttackPosition.position, AttackRange, Mask);
+      if (!enemy) return;
+
+      _attackCoroutine = StartCoroutine(AttackCoroutine(enemy));
+    }
+
+    private IEnumerator AttackCoroutine(Collider2D collider) {
+      isPatrolling = false;
+      while (true) {
+        try {
+          var e = collider.GetComponent<Player>();
+          if (!e.isAlive) yield break;
+          
+          e.Hurt(AttackPoints);
+          _animator.Play("Attack");
+        }
+        catch (Exception e) {
+          throw new Exception("Player is already dead.");
+        }
+
+        yield return new WaitForSeconds(1f);
+      }
     }
     
-    #region Interface relization
-    public void Move(float values) {
-      throw new NotImplementedException();
-    }
-
-    public void Attack() {
-      throw new NotImplementedException();
-    }
-
     public void Idle() { }
 
-    public void Hurt() {
-      throw new NotImplementedException();
+    public void Hurt(int value) {
+      print("HURT");
+      Health -= value;
+      _animator.SetTrigger("Damage");
+      DOSetHp();
+      
+      if (Health < value) {
+        _animator.SetTrigger("Damage");
+        Health = 0;
+        DOSetHp();
+        Invoke(nameof(Death), .3f); 
+      }
     }
 
     public void Death() {
@@ -119,19 +143,21 @@ namespace Behaviour {
       _spriteRenderer.sprite = _deathSprite; 
       patrollingCoroutine.Kill();
       enabled = false;
-      
-      // Destroy(gameObject);
     }
 
-    public void Jump() {
-      throw new NotImplementedException();
+    private void DOSetHp() {
+      _hpSlider.value = Health;
     }
+
+    public void Jump() { }
 
     public void StopPatrolling() {
       patrollingCoroutine.Kill();
     }
 
     public void Patrol() {
+      if (!isPatrolling) return;
+      
       var tr = transform.position;
       _patrolLeft = new Vector2(tr.x - _patrolRadius * 2, tr.y);
       _patrolRight = new Vector2(tr.x, tr.y);
@@ -152,8 +178,6 @@ namespace Behaviour {
     }
 
     public void Angry() { }
-
-    public void ReturnToPatrol() { }
     #endregion
   }
 }

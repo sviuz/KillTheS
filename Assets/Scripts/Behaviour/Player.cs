@@ -1,36 +1,31 @@
 ﻿using System;
 using Behaviour.Based;
 using UnityEngine;
-using static Other.Data.PLayerData;
+using static Other.Data.PlayerData;
 
 namespace Behaviour {
-  public class Player : MonoBehaviour,
+  public class Player : SubjectParameters,
     IPlayerBehavior {
-    [SerializeField]
-    private float _speed = 4.0f;
     [SerializeField]
     private float _jumpForce = 7.5f;
     [SerializeField]
     private Sensor_Bandit _groundSensor;
-    [SerializeField]
-    private Transform _attackPoint;
-    [SerializeField]
-    private float _attackRange = .5f;
-    [SerializeField]
-    private LayerMask _enemyLayerMask;
-
-    //1 - right, -1 - left
-    private int raycastDirection = 1;
     
     private Animator _animator;
     private Rigidbody2D _body2d;
+    private BoxCollider2D _boxCollider;    
+    
     private bool _grounded;
     private bool _combatIdle;
     private bool _isDead;
+    
+    private Vector2 _defaultBoxColliderX = new Vector2(0.8f, 1.5f);
+    private Vector2 _defendedBoxColliderX = new Vector2(2f, 1.5f);
 
-    private void Start() {
+    private void Awake() {
       _animator = GetComponent<Animator>();
       _body2d = GetComponent<Rigidbody2D>();
+      _boxCollider = GetComponent<BoxCollider2D>();
     }
 
     private void Update() {
@@ -43,11 +38,9 @@ namespace Behaviour {
     private void MainBehaviour(float value) {
       if (Input.GetKeyDown("e")) {
         Death();
-      } else if (Input.GetKeyDown("q")) {
-        Hurt();
       } else if (Input.GetMouseButtonDown(0)) {
         Attack();
-      } else if (Input.GetKeyDown("f")) {
+      } else if (Input.GetKeyDown(KeyCode.Mouse1)) {
         ChangeCombatPose();
       } else if (Input.GetKeyDown("space") && _grounded) {
         Jump();
@@ -63,13 +56,11 @@ namespace Behaviour {
     public void Move(float inputX) {
       if (inputX > 0) {
         transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
-        raycastDirection = -1;
       } else if (inputX < 0) {
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        raycastDirection = 1;
       }
 
-      _body2d.velocity = new Vector2(inputX * _speed, _body2d.velocity.y);
+      _body2d.velocity = new Vector2(inputX * Speed, _body2d.velocity.y);
 
       _animator.SetFloat(moveTriggers.AirSpeed, _body2d.velocity.y);
     }
@@ -84,32 +75,27 @@ namespace Behaviour {
     }
 
     private void Hit() {
-
-      var enemy = Physics2D.OverlapCircle(_attackPoint.position, _attackRange, _enemyLayerMask);
+      Collider2D enemy = Physics2D.OverlapCircle(AttackPosition.position, AttackRange, Mask);
       if (enemy) {
         try {
           var e = enemy.GetComponent<EnemyObject>();
-          if (e.IsAlive) {
-            e.GetDamage(10);
+          if (e.isAlive) {
+            e.Hurt(AttackPoints);
           }
         }
         catch (Exception e) {
           Console.WriteLine("Enemy is already dead.");
           throw;
         }
-        /*if (enemy.GetComponent<EnemyObject>()) {
-          if (enemy.GetComponent<EnemyObject>().IsAlive) {
-            enemy.GetComponent<EnemyObject>().GetDamage(10);
-          }
-        }*/
       }
     }
     public void Idle() {
       _animator.SetInteger(moveTriggers.AnimState, 0);
     }
 
-    public void Hurt() {
+    public void Hurt(int value) {
       _animator.SetTrigger(moveTriggers.Hurt);
+      
     }
 
     public void Death() {
@@ -129,11 +115,12 @@ namespace Behaviour {
       _animator.SetInteger(moveTriggers.AnimState, 1);
     }
 
-    public void ChangeCombatPose() {
+    private void ChangeCombatPose() {
       _combatIdle = !_combatIdle;
+      _boxCollider.size = _combatIdle ? _defendedBoxColliderX : _defaultBoxColliderX;
     }
 
-    public void Grounded() {
+    private void Grounded() {
       if (!_grounded && _groundSensor.State()) {
         _grounded = true;
         _animator.SetBool(moveTriggers.Grounded, _grounded);
