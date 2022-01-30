@@ -1,9 +1,18 @@
-﻿using Behaviour;
+﻿using System;
+using Behaviour;
 
 namespace Other {
 	public static class Data {
 		public static class PlayerData {
 			public static MoveTriggers moveTriggers = new MoveTriggers();
+		}
+		
+		public enum ItemType {
+			Food,
+			Poison,
+			Money,
+			Quest,
+			Other
 		}
 		
 		public enum EnemyType {
@@ -25,6 +34,13 @@ namespace Other {
 		public struct Tags {
 			public static string Player = "Player";
 			public static string Enemy = "Enemy";
+			
+		}
+		
+		public enum TagsEnum {
+			Player,
+			Enemy,
+			Drag
 		}
 		
 		public enum EnemyState {
