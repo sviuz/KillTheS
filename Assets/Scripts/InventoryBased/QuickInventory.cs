@@ -1,16 +1,29 @@
-﻿using System.Collections.Generic;
-using UnityEngine.EventSystems;
-
-namespace InventoryBased {
+﻿namespace InventoryBased {
+  public delegate void AddItemToQuickInventory(InventoryItem item);
+  public delegate void RemoveItemToQuickInventoryByIndex(int index);
   public class QuickInventory : Inventory {
-    private void Awake() {
-      _inventoryList = new List<InventoryItem>();
-      maxListCounter = 5;
-    }
+    public static AddItemToQuickInventory OnAddItemToQuickInventory;
+    public static RemoveItemToQuickInventoryByIndex OnRemoveItemToQuickInventoryByIndex;
 
-    public override void OnDrop(PointerEventData data) {
-      base.OnDrop(data);
-      
+    private void Awake() {
+      Container = new InventoryContainer(5);
+      SubscribeActions();
     }
+    
+    private void OnDestroy() {
+      UnsubscribeActions();
+    }
+    
+    private void SubscribeActions() {
+      OnAddItemToQuickInventory += AddItem;
+      OnRemoveItemToQuickInventoryByIndex += RemoveItemByIndex;
+    }
+    
+    private void UnsubscribeActions() {
+      OnAddItemToQuickInventory -= AddItem;
+      OnRemoveItemToQuickInventoryByIndex -= RemoveItemByIndex;
+    }
+    
+    
   }
 }

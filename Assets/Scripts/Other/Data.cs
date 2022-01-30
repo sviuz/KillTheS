@@ -19,6 +19,11 @@ namespace Other {
 			Skeleton,
 			Wizard
 		}
+
+		public enum InventoryType {
+			QuickInventory,
+			FullInventory
+		}
 		
 		public class MoveTriggers {
 			public string Hurt = "Hurt";

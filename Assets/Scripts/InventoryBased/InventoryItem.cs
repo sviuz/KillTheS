@@ -9,25 +9,34 @@ using UnityEngine.UI;
 
 namespace InventoryBased {
   public class InventoryItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler {
+    public static InventoryItem dragItem;
+
     [SerializeField]
     private Image _image;
     [SerializeField]
     private PickableObject _pickableObject;
     [SerializeField]
     private Vector3 itemStartPosition;
-
-    public static InventoryItem dragItem;
+    
     private RectTransform rectTransform;
     private Transform itemParent;
     private CanvasGroup canvasGroup;
     private RectTransform dragLayer;
     private bool canDrag { get; set; } = true;
-
+    public Data.InventoryType inventoryType { get; private set; }
+    
+    public void ChangeInventoryType(Data.InventoryType type) {
+      inventoryType = type;
+    }
+    
     private void Awake() {
       rectTransform = GetComponent<RectTransform>();
       canvasGroup = GetComponent<CanvasGroup>();
+      inventoryType = Data.InventoryType.FullInventory;
     }
 
+    
+    
     private void Start() {
       dragLayer = LayerManager.instance.GetRectByTag(Data.TagsEnum.Drag);
     }
@@ -42,13 +51,17 @@ namespace InventoryBased {
     }
 
     public void OnEndDrag(PointerEventData eventData) {
+      var sq = DOTween.Sequence();
       dragItem = null;
       canvasGroup.blocksRaycasts = true;
       if (transform.parent == dragLayer) {
-        print("returning item...");
         transform.SetParent(itemParent);
-        transform.localPosition = itemStartPosition;
-      } 
+        sq.Append(transform.DOLocalMove(Vector3.zero, .2f)).OnStart(() => { canDrag = false; })
+          .OnComplete(() => {
+                        canDrag = true;
+                        transform.localPosition = itemStartPosition;
+                      });
+      }
     }
 
     public void OnDrag(PointerEventData eventData) {
