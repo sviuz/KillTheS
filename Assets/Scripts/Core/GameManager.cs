@@ -1,4 +1,5 @@
 ﻿using System;
+using InventoryBased;
 using UnityEngine;
 using Zenject;
 
@@ -7,6 +8,8 @@ namespace Core {
     [SerializeField]
     private GameObject _player;
 
+    private bool inventoryOpen;
+    
     [Inject]
     public Vector2 GetPlayerPosition() {
       if (_player) {
@@ -16,5 +19,16 @@ namespace Core {
       throw new NullReferenceException("Player is not set");
     }
 
+    private void Update() {
+      if (Input.GetKeyUp(KeyCode.I)) {
+        if (inventoryOpen) {
+          InventoryManager.OnHideInventory?.Invoke();
+        } else {
+          InventoryManager.OnOpenInventory?.Invoke() :
+        }
+
+        inventoryOpen = !inventoryOpen;
+      }
+    }
   }
 }

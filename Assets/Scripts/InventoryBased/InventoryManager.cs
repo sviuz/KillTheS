@@ -1,5 +1,9 @@
-﻿namespace InventoryBased {
+﻿using System;
+
+namespace InventoryBased {
   public static  class InventoryManager {
+    public static Action OnOpenInventory;
+    public static Action OnHideInventory;
     public static void AddItem(ref InventoryContainer container, InventoryItem item) {
       if (container._maxListCount >= container._inventoryItems.Count) return;
       

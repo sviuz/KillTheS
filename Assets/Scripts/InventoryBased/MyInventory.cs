@@ -1,8 +1,5 @@
 ﻿namespace InventoryBased {
-  
-  public class QuickInventory : Inventory {
-    
-    
+  public class MyInventory : Inventory  {
     private void Awake() {
       Container = new InventoryContainer(5);
       SubscribeActions();
@@ -43,7 +40,5 @@
     private void HideQuickInventory() {
       _canvasGroup.blocksRaycasts = false;
     }
-
-    
   }
 }

@@ -32,17 +32,14 @@ namespace InventoryBased {
     private void Awake() {
       rectTransform = GetComponent<RectTransform>();
       canvasGroup = GetComponent<CanvasGroup>();
-      inventoryType = Data.InventoryType.FullInventory;
+      inventoryType = Data.InventoryType.MyInventory;
     }
-
-    
     
     private void Start() {
       dragLayer = LayerManager.instance.GetRectByTag(Data.TagsEnum.Drag);
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
-      print("OnBeginDrag");
       dragItem = this;
       itemStartPosition = transform.localPosition;
       itemParent = transform.parent;
@@ -67,7 +64,6 @@ namespace InventoryBased {
     public void OnDrag(PointerEventData eventData) {
       if (!canDrag) return;
 
-      print("OnDrag");
       rectTransform.anchoredPosition += eventData.delta;
     }
   }

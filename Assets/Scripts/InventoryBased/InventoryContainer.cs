@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace InventoryBased {
+  [Serializable]
   public class InventoryContainer {
     public int _maxListCount { get; private set; }
     public List<InventoryItem> _inventoryItems;

@@ -7,7 +7,6 @@ public class Chest : MonoBehaviour {
   [SerializeField]
   private GameObject _enterDetector;
 
-  private Inventory _inventoryChest;
   private bool isClosed = true;
   
   private float _startDetectorPosY;
