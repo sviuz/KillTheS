@@ -1,4 +1,6 @@
-﻿using Other;
+﻿using System;
+using Newtonsoft.Json;
+using Other;
 using UnityEngine;
 
 namespace InventoryBased {
@@ -10,15 +12,20 @@ namespace InventoryBased {
       LoadInventories();
     }
 
+    private void Start() {
+      SetInventories();
+    }
+
     private void LoadInventories() {
-      var myContainer = JsonConvert.DeserializeObject<InventoryItem>(
+      _myInventoryContainer = JsonConvert.DeserializeObject<InventoryContainer>(
         PlayerPrefs.GetString(Data.InventoryType.MyInventory.ToString()));
-      var quickContainer = JsonConvert.DeserializeObject<InventoryItem>(
+      _quickInventoryContainer = JsonConvert.DeserializeObject<InventoryContainer>(
         PlayerPrefs.GetString(Data.InventoryType.QuickInventory.ToString()));
     }
 
     private void SetInventories() {
-      
+      MyInventory.OnSetContainer?.Invoke(_myInventoryContainer);
+      QuickInventory.OnSetContainer?.Invoke(_quickInventoryContainer);
     }
   }
 }

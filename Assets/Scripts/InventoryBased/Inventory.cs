@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace InventoryBased {
   public delegate void AddItemToInventory(InventoryItem item);
@@ -7,6 +8,7 @@ namespace InventoryBased {
     public AddItemToInventory OnAddItemToInventory;
     public RemoveItemToInventoryByIndex OnRemoveItemToInventoryByIndex;
     
+
     [SerializeField]
     public CanvasGroup _canvasGroup;
     
@@ -16,6 +18,10 @@ namespace InventoryBased {
       if (_canvasGroup == null) {
         _canvasGroup = GetComponent<CanvasGroup>();
       }
+    }
+
+    protected void SetContainer(InventoryContainer container) {
+      Container = container;
     }
 
     protected virtual void AddItem(InventoryItem item) {

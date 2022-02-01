@@ -1,7 +1,10 @@
-﻿namespace InventoryBased {
+﻿using System;
+
+namespace InventoryBased {
   
   public class QuickInventory : Inventory {
-    
+    public static Action<InventoryContainer> OnSetContainer;
+
     
     private void Awake() {
       Container = new InventoryContainer(5);
@@ -17,6 +20,7 @@
       OnRemoveItemToInventoryByIndex += RemoveItemByIndex;
       InventoryController.OnOpenInventory += OpenQuickInventory;
       InventoryController.OnHideInventory += HideQuickInventory;
+      OnSetContainer += SetContainer;
     }
     
     private void UnsubscribeActions() {
@@ -24,7 +28,10 @@
       OnRemoveItemToInventoryByIndex -= RemoveItemByIndex;
       InventoryController.OnOpenInventory -= OpenQuickInventory;
       InventoryController.OnHideInventory -= HideQuickInventory;
+      OnSetContainer -= SetContainer;
     }
+    
+    
 
     protected override void AddItem(InventoryItem item) {
       base.AddItem(item);
