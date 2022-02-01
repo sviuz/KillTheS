@@ -1,19 +1,24 @@
-﻿using System;
+﻿using Other;
+using UnityEngine;
 
 namespace InventoryBased {
-  public static  class InventoryManager {
-    public static Action OnOpenInventory;
-    public static Action OnHideInventory;
-    public static void AddItem(ref InventoryContainer container, InventoryItem item) {
-      if (container._maxListCount >= container._inventoryItems.Count) return;
-      
-      container._inventoryItems.Add(item);
+  public class InventoryManager : MonoBehaviour {
+    private InventoryContainer _myInventoryContainer;
+    private InventoryContainer _quickInventoryContainer;
+
+    private void Awake() {
+      LoadInventories();
     }
 
-    public static void RemoteItem(ref InventoryContainer container, int index) {
-      if (container._inventoryItems[index] == null) return;
+    private void LoadInventories() {
+      var myContainer = JsonConvert.DeserializeObject<InventoryItem>(
+        PlayerPrefs.GetString(Data.InventoryType.MyInventory.ToString()));
+      var quickContainer = JsonConvert.DeserializeObject<InventoryItem>(
+        PlayerPrefs.GetString(Data.InventoryType.QuickInventory.ToString()));
+    }
 
-      container._inventoryItems.RemoveAt(index);
+    private void SetInventories() {
+      
     }
   }
 }

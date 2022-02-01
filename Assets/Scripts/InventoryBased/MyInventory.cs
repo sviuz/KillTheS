@@ -12,15 +12,15 @@
     private void SubscribeActions() {
       OnAddItemToInventory += AddItem;
       OnRemoveItemToInventoryByIndex += RemoveItemByIndex;
-      InventoryManager.OnOpenInventory += OpenQuickInventory;
-      InventoryManager.OnHideInventory += HideQuickInventory;
+      InventoryController.OnOpenInventory += OpenQuickInventory;
+      InventoryController.OnHideInventory += HideQuickInventory;
     }
     
     private void UnsubscribeActions() {
       OnAddItemToInventory -= AddItem;
       OnRemoveItemToInventoryByIndex -= RemoveItemByIndex;
-      InventoryManager.OnOpenInventory -= OpenQuickInventory;
-      InventoryManager.OnHideInventory -= HideQuickInventory;
+      InventoryController.OnOpenInventory -= OpenQuickInventory;
+      InventoryController.OnHideInventory -= HideQuickInventory;
     }
 
     protected override void AddItem(InventoryItem item) {

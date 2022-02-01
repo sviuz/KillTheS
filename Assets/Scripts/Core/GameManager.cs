@@ -22,9 +22,9 @@ namespace Core {
     private void Update() {
       if (Input.GetKeyUp(KeyCode.I)) {
         if (inventoryOpen) {
-          InventoryManager.OnHideInventory?.Invoke();
+          InventoryController.OnHideInventory?.Invoke();
         } else {
-          InventoryManager.OnOpenInventory?.Invoke() :
+          InventoryController.OnOpenInventory?.Invoke();
         }
 
         inventoryOpen = !inventoryOpen;

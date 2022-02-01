@@ -19,11 +19,11 @@ namespace InventoryBased {
     }
 
     protected virtual void AddItem(InventoryItem item) {
-      InventoryManager.AddItem(ref Container, item);
+      InventoryController.AddItem(ref Container, item);
     }
 
     protected virtual void RemoveItemByIndex(int index) {
-      InventoryManager.RemoteItem(ref Container, index);
+      InventoryController.RemoteItem(ref Container, index);
     }
   }
 }
