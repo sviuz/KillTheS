@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using DG.Tweening;
-using JetBrains.Annotations;
+﻿using DG.Tweening;
 using Other;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,26 +15,7 @@ namespace InventoryBased {
       Transform it = item.transform;
       it.SetParent(transform);
       it.DOLocalMove(Vector3.zero, .1f);
-      ChangeInventoryItemType(item);
-
-      print(item.GetItemType());
-    }
-
-    private void ChangeInventoryItemType(InventoryItem item) {
-      item.ChangeInventoryType(_type);
-
-
-      bool myTypeItem = item.GetItemType() == Constants.InventoryType.MyInventory;
-      List<InventoryItem> addList = myTypeItem
-        ? MyInventory.OnGetContainer?.Invoke()._inventoryItems
-        : QuickInventory.OnGetContainer?.Invoke()._inventoryItems;
-      List<InventoryItem> removeList = myTypeItem
-        ? QuickInventory.OnGetContainer?.Invoke()._inventoryItems
-        : MyInventory.OnGetContainer?.Invoke()._inventoryItems;
-      
-
-      InventoryController.AddItemToList(ref addList, item);
-      InventoryController.RemoveItemFromList(ref removeList, item);
+      InventoryController.ChangeInventoryItemType(ref item, _type);
     }
   }
 }

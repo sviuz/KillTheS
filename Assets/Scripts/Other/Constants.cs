@@ -26,7 +26,7 @@ namespace Other {
 
 		public enum InventoryType {
 			QuickInventory,
-			MyInventory
+			FullInventory
 		}
 		
 		public class MoveTriggers {

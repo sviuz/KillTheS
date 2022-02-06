@@ -11,20 +11,11 @@ namespace InventoryBased {
       LoadInventories();
     }
 
-    private void Start() {
-      SetInventories();
-    }
-
     private void LoadInventories() {
       _myInventoryContainer = JsonConvert.DeserializeObject<InventoryContainer>(
-        PlayerPrefs.GetString(Constants.InventoryType.MyInventory.ToString()));
+        PlayerPrefs.GetString(Constants.InventoryType.FullInventory.ToString()));
       _quickInventoryContainer = JsonConvert.DeserializeObject<InventoryContainer>(
         PlayerPrefs.GetString(Constants.InventoryType.QuickInventory.ToString()));
-    }
-
-    private void SetInventories() {
-      MyInventory.OnSetContainer?.Invoke(_myInventoryContainer);
-      QuickInventory.OnSetContainer?.Invoke(_quickInventoryContainer);
     }
   }
 }
