@@ -2,17 +2,13 @@
 using UnityEngine;
 
 namespace InventoryBased {
-  public delegate void AddItemToInventory(InventoryItem item);
-  public delegate void RemoveItemToInventoryByIndex(int index);
-  public class Inventory : MonoBehaviour {
-    public AddItemToInventory OnAddItemToInventory;
-    public RemoveItemToInventoryByIndex OnRemoveItemToInventoryByIndex;
-    
-
+  [Serializable]
+  public abstract class Inventory : MonoBehaviour {
     [SerializeField]
     public CanvasGroup _canvasGroup;
-    
+
     public InventoryContainer Container;
+    
 
     private void Awake() {
       if (_canvasGroup == null) {
@@ -21,15 +17,9 @@ namespace InventoryBased {
     }
 
     protected void SetContainer(InventoryContainer container) {
+      if (Container == null) return;
+      
       Container = container;
-    }
-
-    protected virtual void AddItem(InventoryItem item) {
-      InventoryController.AddItem(ref Container, item);
-    }
-
-    protected virtual void RemoveItemByIndex(int index) {
-      InventoryController.RemoteItem(ref Container, index);
     }
   }
 }

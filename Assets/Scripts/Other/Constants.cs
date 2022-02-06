@@ -1,8 +1,12 @@
 ﻿using System;
 using Behaviour;
+using InventoryBased;
 
 namespace Other {
-	public static class Data {
+	public static class Constants {
+		public delegate void AddItemToInventory(InventoryItem item);
+		public delegate void RemoveItemToInventoryByIndex(int index);
+		
 		public static class PlayerData {
 			public static MoveTriggers moveTriggers = new MoveTriggers();
 		}
@@ -26,14 +30,14 @@ namespace Other {
 		}
 		
 		public class MoveTriggers {
-			public string Hurt = "Hurt";
-			public string Attack = "Attack";
-			public string Jump = "Jump";
-			public string Grounded = "Grounded";
-			public string AnimState = "AnimState";
-			public string AirSpeed = "AirSpeed";
-			public string Death = "Death";
-			public string Recover = "Recover";
+			public readonly string Hurt = "Hurt";
+			public readonly string Attack = "Attack";
+			public readonly string Jump = "Jump";
+			public readonly string Grounded = "Grounded";
+			public readonly string AnimState = "AnimState";
+			public readonly string AirSpeed = "AirSpeed";
+			public readonly string Death = "Death";
+			public readonly string Recover = "Recover";
 		}
 		
 		public struct Tags {

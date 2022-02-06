@@ -17,8 +17,8 @@ namespace Managers {
       }
     }
 
-    public RectTransform GetRectByTag(Data.TagsEnum tag) {
-      if (tag == Data.TagsEnum.Drag) {
+    public RectTransform GetRectByTag(Constants.TagsEnum tag) {
+      if (tag == Constants.TagsEnum.Drag) {
         return _dragLayerRect;
       } else {
         return new RectTransform();

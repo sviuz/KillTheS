@@ -71,7 +71,7 @@ namespace Behaviour {
     }
 
     private void OnCollisionEnter2D(Collision2D col) {
-      if (col.transform.name != Data.Tags.Player) return;
+      if (col.transform.name != Constants.Tags.Player) return;
       if (!isAlive) return;
       
       Attack();

@@ -13,13 +13,13 @@ namespace Behaviour.Based {
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-      if (other.transform.CompareTag(Data.Tags.Player)) {
+      if (other.transform.CompareTag(Constants.Tags.Player)) {
         
       }
     }
 
     private void OnTriggerExit2D(Collider2D other) {
-      if (other.transform.CompareTag(Data.Tags.Player)) {
+      if (other.transform.CompareTag(Constants.Tags.Player)) {
       }
     }
   }

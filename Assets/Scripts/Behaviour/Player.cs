@@ -1,7 +1,7 @@
 ﻿using System;
 using Behaviour.Based;
 using UnityEngine;
-using static Other.Data.PlayerData;
+using static Other.Constants.PlayerData;
 
 namespace Behaviour {
   public class Player : SubjectParameters,

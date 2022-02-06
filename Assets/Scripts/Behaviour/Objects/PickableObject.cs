@@ -1,17 +1,14 @@
-﻿using Other;
-using UnityEngine;
+﻿using UnityEngine;
+using static Other.Constants;
 
 namespace Behaviour.Objects {
   public class PickableObject : MonoBehaviour {
     [SerializeField]
-    private string Name;
+    private string _name;
     [SerializeField]
-    private Data.ItemType _itemType;
+    private ItemType _itemType;
 
-    public string itemType {
-      get {
-        return _itemType.ToString();
-      }
-    }
+    
+    
   }
 }

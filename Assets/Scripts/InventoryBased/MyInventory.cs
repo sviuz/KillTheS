@@ -3,7 +3,8 @@
 namespace InventoryBased {
   public class MyInventory : Inventory  {
     public static Action<InventoryContainer> OnSetContainer;
-
+    public static Func<InventoryContainer> OnGetContainer;
+    public InventoryContainer GetContainer() => Container;
     private void Awake() {
       Container = new InventoryContainer(5);
       SubscribeActions();
@@ -14,31 +15,14 @@ namespace InventoryBased {
     }
     
     private void SubscribeActions() {
-      OnAddItemToInventory += AddItem;
-      OnRemoveItemToInventoryByIndex += RemoveItemByIndex;
-      InventoryController.OnOpenInventory += OpenQuickInventory;
-      InventoryController.OnHideInventory += HideQuickInventory;
       OnSetContainer += SetContainer;
+      OnGetContainer += GetContainer;
+
     }
     
     private void UnsubscribeActions() {
-      OnAddItemToInventory -= AddItem;
-      OnRemoveItemToInventoryByIndex -= RemoveItemByIndex;
-      InventoryController.OnOpenInventory -= OpenQuickInventory;
-      InventoryController.OnHideInventory -= HideQuickInventory;
       OnSetContainer -= SetContainer;
-    }
-    
-    
-
-    protected override void AddItem(InventoryItem item) {
-      base.AddItem(item);
-      print("Quick Inventory Add Item");
-    }
-
-    protected override void RemoveItemByIndex(int index) {
-      base.RemoveItemByIndex(index);
-      print("Quick Inventory Add Item");
+      OnGetContainer -= GetContainer;
     }
 
     private void OpenQuickInventory() {
@@ -48,5 +32,7 @@ namespace InventoryBased {
     private void HideQuickInventory() {
       _canvasGroup.blocksRaycasts = false;
     }
+
+    public void GetData() { }
   }
 }

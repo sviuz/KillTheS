@@ -1,5 +1,4 @@
 ﻿using System;
-using InventoryBased;
 using UnityEngine;
 using Zenject;
 
@@ -21,12 +20,6 @@ namespace Core {
 
     private void Update() {
       if (Input.GetKeyUp(KeyCode.I)) {
-        if (inventoryOpen) {
-          InventoryController.OnHideInventory?.Invoke();
-        } else {
-          InventoryController.OnOpenInventory?.Invoke();
-        }
-
         inventoryOpen = !inventoryOpen;
       }
     }

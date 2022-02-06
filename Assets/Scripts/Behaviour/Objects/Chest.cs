@@ -16,14 +16,14 @@ public class Chest : MonoBehaviour {
   }
 
   private void OnTriggerEnter2D(Collider2D col) {
-    if (!col.CompareTag(Data.Tags.Player)) return;
+    if (!col.CompareTag(Constants.Tags.Player)) return;
         
     print("open chest"); 
     EnterDetection();
   }
 
   private void OnTriggerExit2D(Collider2D col) {
-    if (!col.CompareTag(Data.Tags.Player)) return;
+    if (!col.CompareTag(Constants.Tags.Player)) return;
     
     print("close chest ");
     EnterDetection(false);

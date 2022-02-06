@@ -1,19 +1,17 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace InventoryBased {
   public static  class InventoryController {
-    public static Action OnOpenInventory;
-    public static Action OnHideInventory;
-    public static void AddItem(ref InventoryContainer container, InventoryItem item) {
-      if (container._maxListCount >= container._inventoryItems.Count) return;
+    public static void AddItemToList(ref List<InventoryItem> list, InventoryItem item) {
+      if (list.Contains(item)) return;
       
-      container._inventoryItems.Add(item);
+      list.Add(item);
     }
 
-    public static void RemoteItem(ref InventoryContainer container, int index) {
-      if (container._inventoryItems[index] == null) return;
+    public static void RemoveItemFromList(ref List<InventoryItem> list, InventoryItem item) {
+      if (!list.Contains(item)) return;
 
-      container._inventoryItems.RemoveAt(index);
+      list.Remove(item);
     }
   }
 }
