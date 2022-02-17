@@ -1,5 +1,4 @@
-﻿using Behaviour.Objects;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,21 +8,19 @@ using static Other.Constants;
 namespace InventoryBased {
   public class InventoryItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler {
     public static InventoryItem dragItem;
-
-    [SerializeField]
-    private Image _image;
-    [SerializeField]
-    private PickableObject _pickableObject;
-    [SerializeField]
+    
     private InventoryType inventoryType;
-
+    private ItemType _itemType;
     private Vector3 itemStartPosition;
+    private Image _image;//TODO Set Image On Awake
     private RectTransform rectTransform;
     private Transform itemParent;
     private CanvasGroup canvasGroup;
     private RectTransform dragLayer;
-    private bool canDrag { get; set; } = true;
+    private bool canDrag = true;
     public InventoryType GetItemType() => inventoryType;
+
+    public ItemType GetType() => _itemType;
 
     public void ChangeInventoryType(InventoryType type) {
       if (Equals(type, inventoryType)) return;
@@ -40,6 +37,7 @@ namespace InventoryBased {
       dragLayer = LayerManager.instance.GetRectByTag(TagsEnum.Drag);
     }
 
+    
     public void OnBeginDrag(PointerEventData eventData) {
       dragItem = this;
       itemStartPosition = transform.localPosition;

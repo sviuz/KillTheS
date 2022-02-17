@@ -1,4 +1,5 @@
 ﻿using System;
+using InventoryBased;
 using UnityEngine;
 using Zenject;
 
@@ -14,13 +15,12 @@ namespace Core {
       if (_player) {
         return _player.transform.position;
       }
-
       throw new NullReferenceException("Player is not set");
     }
 
     private void Update() {
       if (Input.GetKeyUp(KeyCode.I)) {
-        inventoryOpen = !inventoryOpen;
+        Inventory.OnChangeVisibility?.Invoke();
       }
     }
   }

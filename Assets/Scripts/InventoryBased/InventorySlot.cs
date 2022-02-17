@@ -7,15 +7,18 @@ namespace InventoryBased {
   public class InventorySlot : MonoBehaviour, IDropHandler {
     [SerializeField]
     private Constants.InventoryType _type;
+    [SerializeField]
+    private Transform parentContainter;
 
     public void OnDrop(PointerEventData eventData) {
       InventoryItem item = InventoryItem.dragItem;
-      if (!item && transform.childCount > 0) return;
+      if (parentContainter.childCount > 0) return;
 
       Transform it = item.transform;
-      it.SetParent(transform);
+      it.SetParent(parentContainter);
       it.DOLocalMove(Vector3.zero, .1f);
-      InventoryController.ChangeInventoryItemType(ref item, _type);
+      
+      InventoryTransfer.ChangeInventoryItemType(ref item, _type);
     }
   }
 }

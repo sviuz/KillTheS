@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using Core;
 using DG.Tweening;
 using InventoryBased;
 using Other;
@@ -7,18 +9,31 @@ public class Chest : MonoBehaviour {
   [SerializeField]
   private GameObject _enterDetector;
 
-  private bool isClosed = true;
-  
+  private Container _container;
+  private const float OffSetY = 1.5f;
   private float _startDetectorPosY;
 
   private void Awake() {
     _startDetectorPosY = _enterDetector.transform.localPosition.y;
   }
 
+  private void Update() {
+    if (Input.GetKeyUp(KeyCode.E)) {
+      OpenChest();
+    }
+  }
+
+  private static void OpenChest() {
+    Inventory.OnChangeVisibility?.Invoke();
+
+    var chestContainer = InventoryGenerator.instance.GenerateContainer();
+
+    Inventory.OnSetContainerList?.Invoke(chestContainer);
+  }
+
   private void OnTriggerEnter2D(Collider2D col) {
     if (!col.CompareTag(Constants.Tags.Player)) return;
         
-    print("open chest"); 
     EnterDetection();
   }
 
@@ -30,12 +45,8 @@ public class Chest : MonoBehaviour {
   }
 
   private void EnterDetection(bool b = true) {
-    var sq = DOTween.Sequence();
-    if (b) {//Enter
-      sq.Append(_enterDetector.transform.DOLocalMoveY(_startDetectorPosY + 15, .2f));
-    } else {//Exit
-      sq.Append(_enterDetector.transform.DOLocalMoveY(_startDetectorPosY, .2f));
-      
-    }
+    float endValue = b ? _startDetectorPosY + OffSetY : _startDetectorPosY;
+    
+    _enterDetector.transform.DOLocalMoveY(endValue, .2f);
   }
 }

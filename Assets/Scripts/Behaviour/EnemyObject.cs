@@ -54,22 +54,6 @@ namespace Behaviour {
       }
     }
 
-    private void OnTriggerEnter2D(Collider2D col) {
-      /*if (!col.CompareTag(Data.Tags.Player)) return;
-      if (!isAlive) return;
-
-      StopPatrolling();
-      _animator.Play("Idle");
-      Angry();*/
-    }
-
-    private void OnTriggerExit2D(Collider2D other) {
-      /*if (!other.CompareTag(Data.Tags.Player)) return;
-      if (!isAlive) return;
-      
-      Move();*/
-    }
-
     private void OnCollisionEnter2D(Collision2D col) {
       if (col.transform.name != Constants.Tags.Player) return;
       if (!isAlive) return;
@@ -84,6 +68,10 @@ namespace Behaviour {
 
       isPatrolling = true;
       Move();
+    }
+
+    private void DropItemAfterDeath() {
+      // var item = 
     }
 
     #region Interface relization
@@ -104,7 +92,7 @@ namespace Behaviour {
       isPatrolling = false;
       while (true) {
         try {
-          var e = collider.GetComponent<Player>();
+          var e = collider.GetComponent<PlayerMovement>();
           if (!e.isAlive) yield break;
           
           e.Hurt(AttackPoints);
