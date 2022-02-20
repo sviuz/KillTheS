@@ -7,63 +7,63 @@ using static Other.Constants;
 
 namespace InventoryBased {
   public class InventoryItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler {
-    public static InventoryItem dragItem;
+    public static InventoryItem DragItem;
     
-    private InventoryType inventoryType;
+    private InventoryType _inventoryType;
     private ItemType _itemType;
-    private Vector3 itemStartPosition;
+    private Vector3 _itemStartPosition;
     private Image _image;//TODO Set Image On Awake
-    private RectTransform rectTransform;
-    private Transform itemParent;
-    private CanvasGroup canvasGroup;
-    private RectTransform dragLayer;
-    private bool canDrag = true;
-    public InventoryType GetItemType() => inventoryType;
+    private RectTransform _rectTransform;
+    private Transform _itemParent;
+    private CanvasGroup _canvasGroup;
+    private RectTransform _dragLayer;
+    private bool _canDrag = true;
+    public InventoryType GetItemType() => _inventoryType;
 
     public ItemType GetType() => _itemType;
 
     public void ChangeInventoryType(InventoryType type) {
-      if (Equals(type, inventoryType)) return;
+      if (Equals(type, _inventoryType)) return;
       
-      inventoryType = type;
+      _inventoryType = type;
     }
 
     private void Awake() {
-      rectTransform = GetComponent<RectTransform>();
-      canvasGroup = GetComponent<CanvasGroup>();
+      _rectTransform = GetComponent<RectTransform>();
+      _canvasGroup = GetComponent<CanvasGroup>();
     }
 
     private void Start() {
-      dragLayer = LayerManager.instance.GetRectByTag(TagsEnum.Drag);
+      _dragLayer = LayerManager.instance.GetRectByTag(TagsEnum.Drag);
     }
 
     
     public void OnBeginDrag(PointerEventData eventData) {
-      dragItem = this;
-      itemStartPosition = transform.localPosition;
-      itemParent = transform.parent;
-      transform.SetParent(dragLayer);
-      canvasGroup.blocksRaycasts = false;
+      DragItem = this;
+      _itemStartPosition = transform.localPosition;
+      _itemParent = transform.parent;
+      transform.SetParent(_dragLayer);
+      _canvasGroup.blocksRaycasts = false;
     }
 
     public void OnEndDrag(PointerEventData eventData) {
       var sq = DOTween.Sequence();
-      dragItem = null;
-      canvasGroup.blocksRaycasts = true;
-      if (transform.parent == dragLayer) {
-        transform.SetParent(itemParent);
-        sq.Append(transform.DOLocalMove(Vector3.zero, .2f)).OnStart(() => { canDrag = false; })
+      DragItem = null;
+      _canvasGroup.blocksRaycasts = true;
+      if (transform.parent == _dragLayer) {
+        transform.SetParent(_itemParent);
+        sq.Append(transform.DOLocalMove(Vector3.zero, .2f)).OnStart(() => { _canDrag = false; })
           .OnComplete(() => {
-                        canDrag = true;
-                        transform.localPosition = itemStartPosition;
+                        _canDrag = true;
+                        transform.localPosition = _itemStartPosition;
                       });
       }
     }
 
     public void OnDrag(PointerEventData eventData) {
-      if (!canDrag) return;
+      if (!_canDrag) return;
 
-      rectTransform.anchoredPosition += eventData.delta;
+      _rectTransform.anchoredPosition += eventData.delta;
     }
   }
 }

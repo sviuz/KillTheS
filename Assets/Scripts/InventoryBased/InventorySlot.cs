@@ -11,7 +11,7 @@ namespace InventoryBased {
     private Transform parentContainter;
 
     public void OnDrop(PointerEventData eventData) {
-      InventoryItem item = InventoryItem.dragItem;
+      InventoryItem item = InventoryItem.DragItem;
       if (parentContainter.childCount > 0) return;
 
       Transform it = item.transform;

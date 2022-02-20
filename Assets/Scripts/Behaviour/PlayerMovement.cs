@@ -1,5 +1,6 @@
 ﻿using System;
 using Behaviour.Based;
+using Behaviour.GameActions;
 using Other;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ namespace Behaviour {
     private float _jumpForce = 7.5f;
     [SerializeField]
     private Sensor_Bandit _groundSensor;
+
+    private Action OnDialogueStart;
     
     private Animator _animator;
     private Rigidbody2D _body2d;
@@ -17,6 +20,8 @@ namespace Behaviour {
     private bool _grounded;
     private bool _combatIdle;
     private bool _isDead;
+
+    private bool _showDialogue;
     
     private Vector2 _defaultBoxColliderX = new Vector2(0.8f, 1.5f);
     private Vector2 _defendedBoxColliderX = new Vector2(2f, 1.5f);
@@ -45,8 +50,28 @@ namespace Behaviour {
         Move();
       } else if (_combatIdle) {
         CombatIdle();
+      } else if (Input.GetKeyUp(KeyCode.E)) {
+        ExecuteDialogue();
       } else {
         Idle();
+      }
+    }
+
+    private void ExecuteDialogue() {
+      OnDialogueStart?.Invoke();
+    }
+
+    private void OnTriggerEnter2D(Collider2D col) {
+      if (col.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
+        print(nameof(OnTriggerEnter2D));
+        OnDialogueStart += dialogueTrigger.OnTrigger;
+      }
+    }
+
+    private void OnTriggerExit2D(Collider2D other) {
+      if (other.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
+        print(nameof(OnTriggerExit2D));
+        OnDialogueStart -= dialogueTrigger.OnTrigger;
       }
     }
 
@@ -86,17 +111,19 @@ namespace Behaviour {
         }
       }
     }
+
     public void Idle() {
       _animator.SetInteger(Constants.MoveTriggers.AnimState.ToString(), 0);
     }
 
     public void Hurt(int value) {
       _animator.SetTrigger(Constants.MoveTriggers.Hurt.ToString());
-      
     }
 
     public void Death() {
-      _animator.SetTrigger(!_isDead ? Constants.MoveTriggers.Death.ToString() : Constants.MoveTriggers.Recover.ToString());
+      _animator.SetTrigger(!_isDead
+        ? Constants.MoveTriggers.Death.ToString()
+        : Constants.MoveTriggers.Recover.ToString());
       _isDead = !_isDead;
     }
 

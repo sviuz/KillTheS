@@ -7,9 +7,9 @@ namespace InventoryBased {
     private List<InventoryItem> _container;
   
     private void Start() {
-      _container = InventoryTransfer.GetContainer()._fullInventoryItems;
+      // _container = InventoryTransfer.GetContainer()._fullInventoryItems;
     }
 
-    public List<InventoryItem> GetMyContainer() => _container;
+    // public List<InventoryItem> GetMyContainer() => _container;
   }
 }

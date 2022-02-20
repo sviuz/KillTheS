@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace Core {
   public class InventoryGenerator : MonoBehaviour {
-    public static InventoryGenerator instance;
+    public static InventoryGenerator Instance;
     [SerializeField]
     private InventoryItemsSO _so;
 

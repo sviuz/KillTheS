@@ -17,7 +17,7 @@ namespace InventoryBased {
     [SerializeField]
     private GameObject _inventoryObject;
     [SerializeField]
-    private bool _visible = false;
+    private bool _visible;
     private InventoryContainer Container;
     
     private void Awake() {
@@ -25,6 +25,7 @@ namespace InventoryBased {
         _canvasGroup = GetComponent<CanvasGroup>();
       }
 
+      _visible = _inventoryObject.activeSelf;
       OnChangeVisibility += ChangeInventoryVisibility;
       OnSetContainerList += SetContainerList;
     }
@@ -62,7 +63,7 @@ namespace InventoryBased {
       _canvasGroup.blocksRaycasts = _visible;
       _inventoryObject.SetActive(_visible);
       if (_visible) {
-        SetContainerList(InventoryStorage.instance.GetMyContainer());
+        //SetContainerList(InventoryStorage.instance.GetMyContainer());
       } else {
         SetContainerList(null);
       }

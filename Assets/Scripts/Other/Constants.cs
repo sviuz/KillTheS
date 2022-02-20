@@ -39,8 +39,9 @@ namespace Other {
     }
     
     public struct Tags {
-      public static string Player = "Player";
-      public static string Enemy = "Enemy";
+      public static string Player = nameof(Player);
+      public static string Enemy = nameof(Enemy);
+      public static string Quest = nameof(Quest);
     }
 
     public enum TagsEnum {
