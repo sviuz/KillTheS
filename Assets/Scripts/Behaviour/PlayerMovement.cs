@@ -3,26 +3,30 @@ using Behaviour.Based;
 using Behaviour.GameActions;
 using Other;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Behaviour {
   public class PlayerMovement : SubjectParameters,
     IPlayerBehavior {
+    public static Action<bool> OnSetMovement;
     [SerializeField]
     private float _jumpForce = 7.5f;
     [SerializeField]
     private Sensor_Bandit _groundSensor;
+    [SerializeField]
+    private Image test;
 
     private Action OnDialogueStart;
-    
+
     private Animator _animator;
     private Rigidbody2D _body2d;
     private BoxCollider2D _boxCollider;
     private bool _grounded;
     private bool _combatIdle;
     private bool _isDead;
-
     private bool _showDialogue;
-    
+    private bool _move = true;
+
     private Vector2 _defaultBoxColliderX = new Vector2(0.8f, 1.5f);
     private Vector2 _defendedBoxColliderX = new Vector2(2f, 1.5f);
 
@@ -30,9 +34,16 @@ namespace Behaviour {
       _animator = GetComponent<Animator>();
       _body2d = GetComponent<Rigidbody2D>();
       _boxCollider = GetComponent<BoxCollider2D>();
+
+      OnSetMovement += SetMovement;
+    }
+
+    private void OnDestroy() {
+      OnSetMovement -= SetMovement;
     }
 
     private void Update() {
+      if (!_move) return;
       Grounded();
       float inputX = Input.GetAxis("Horizontal");
       Move(inputX);
@@ -40,6 +51,8 @@ namespace Behaviour {
     }
 
     private void MainBehaviour(float value) {
+      
+      
       if (Input.GetMouseButtonDown(0)) {
         Attack();
       } else if (Input.GetKeyDown(KeyCode.Mouse1)) {
@@ -55,6 +68,10 @@ namespace Behaviour {
       } else {
         Idle();
       }
+    }
+
+    private void SetMovement(bool status) {
+      _move = status;
     }
 
     private void ExecuteDialogue() {

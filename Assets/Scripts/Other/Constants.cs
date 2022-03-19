@@ -7,6 +7,7 @@ namespace Other {
     public delegate void AddItemToInventory(InventoryItem item);
     public delegate bool RemoveItemFromQuickListEvent(int index);
 
+    public static string MyInventory = nameof(MyInventory);
 
     public enum ItemType {
       Food,

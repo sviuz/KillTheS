@@ -36,7 +36,6 @@ namespace InventoryBased {
     private void Start() {
       _dragLayer = LayerManager.instance.GetRectByTag(TagsEnum.Drag);
     }
-
     
     public void OnBeginDrag(PointerEventData eventData) {
       DragItem = this;

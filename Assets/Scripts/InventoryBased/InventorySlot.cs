@@ -18,7 +18,7 @@ namespace InventoryBased {
       it.SetParent(parentContainter);
       it.DOLocalMove(Vector3.zero, .1f);
       
-      InventoryTransfer.ChangeInventoryItemType(ref item, _type);
+      item.ChangeInventoryType(_type);
     }
   }
 }
