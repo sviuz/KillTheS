@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Managers;
+using SO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,7 +13,7 @@ namespace InventoryBased {
     private InventoryType _inventoryType;
     private ItemType _itemType;
     private Vector3 _itemStartPosition;
-    private Image _image;//TODO Set Image On Awake
+    private Sprite _image;//TODO Set Image On Awake
     private RectTransform _rectTransform;
     private Transform _itemParent;
     private CanvasGroup _canvasGroup;
@@ -51,7 +52,8 @@ namespace InventoryBased {
       _canvasGroup.blocksRaycasts = true;
       if (transform.parent == _dragLayer) {
         transform.SetParent(_itemParent);
-        sq.Append(transform.DOLocalMove(Vector3.zero, .2f)).OnStart(() => { _canDrag = false; })
+        sq.Append(transform.DOLocalMove(Vector3.zero, .2f))
+          .OnStart(() => { _canDrag = false; })
           .OnComplete(() => {
                         _canDrag = true;
                         transform.localPosition = _itemStartPosition;

@@ -51,5 +51,9 @@ namespace Managers {
     private static void EndDialogue() {
       print("End Conversation");
     }
+
+    public void ShowPreviewPopUp() {
+      
+    }
   }
 }

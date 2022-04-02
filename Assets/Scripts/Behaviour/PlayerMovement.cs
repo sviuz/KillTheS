@@ -1,9 +1,10 @@
 ﻿using System;
 using Behaviour.Based;
 using Behaviour.GameActions;
-using Other;
+using Ui.Dialogs;
 using UnityEngine;
 using UnityEngine.UI;
+using static Other.Constants;
 
 namespace Behaviour {
   public class PlayerMovement : SubjectParameters,
@@ -49,10 +50,24 @@ namespace Behaviour {
       Move(inputX);
       MainBehaviour(inputX);
     }
+    
+    private void OnTriggerEnter2D(Collider2D col) {
+      if (col.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
+        print(nameof(OnTriggerEnter2D));
+        OnDialogueStart += dialogueTrigger.OnTrigger;
+        dialogueTrigger.OnShowPopUp?.Invoke();
+      }
+    }
+
+    private void OnTriggerExit2D(Collider2D other) {
+      if (other.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
+        print(nameof(OnTriggerExit2D));
+        OnDialogueStart -= dialogueTrigger.OnTrigger;
+        dialogueTrigger.OnHidePopUp?.Invoke();
+      }
+    }
 
     private void MainBehaviour(float value) {
-      
-      
       if (Input.GetMouseButtonDown(0)) {
         Attack();
       } else if (Input.GetKeyDown(KeyCode.Mouse1)) {
@@ -78,20 +93,6 @@ namespace Behaviour {
       OnDialogueStart?.Invoke();
     }
 
-    private void OnTriggerEnter2D(Collider2D col) {
-      if (col.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
-        print(nameof(OnTriggerEnter2D));
-        OnDialogueStart += dialogueTrigger.OnTrigger;
-      }
-    }
-
-    private void OnTriggerExit2D(Collider2D other) {
-      if (other.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
-        print(nameof(OnTriggerExit2D));
-        OnDialogueStart -= dialogueTrigger.OnTrigger;
-      }
-    }
-
     public void Move(float inputX) {
       if (inputX > 0) {
         transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
@@ -101,15 +102,15 @@ namespace Behaviour {
 
       _body2d.velocity = new Vector2(inputX * Speed, _body2d.velocity.y);
 
-      _animator.SetFloat(Constants.MoveTriggers.AirSpeed.ToString(), _body2d.velocity.y);
+      _animator.SetFloat(nameof(MoveTriggers.AirSpeed), _body2d.velocity.y);
     }
 
     public void Move() {
-      _animator.SetInteger(Constants.MoveTriggers.AnimState.ToString(), 2);
+      _animator.SetInteger(nameof(MoveTriggers.AnimState), 2);
     }
 
     public void Attack() {
-      _animator.SetTrigger(Constants.MoveTriggers.Attack.ToString());
+      _animator.SetTrigger(nameof(MoveTriggers.Attack));
       Invoke(nameof(Hit), .15f);
     }
 
@@ -130,30 +131,30 @@ namespace Behaviour {
     }
 
     public void Idle() {
-      _animator.SetInteger(Constants.MoveTriggers.AnimState.ToString(), 0);
+      _animator.SetInteger(MoveTriggers.AnimState.ToString(), 0);
     }
 
     public void Hurt(int value) {
-      _animator.SetTrigger(Constants.MoveTriggers.Hurt.ToString());
+      _animator.SetTrigger(MoveTriggers.Hurt.ToString());
     }
 
     public void Death() {
       _animator.SetTrigger(!_isDead
-        ? Constants.MoveTriggers.Death.ToString()
-        : Constants.MoveTriggers.Recover.ToString());
+        ? MoveTriggers.Death.ToString()
+        : MoveTriggers.Recover.ToString());
       _isDead = !_isDead;
     }
 
     public void Jump() {
-      _animator.SetTrigger(Constants.MoveTriggers.Jump.ToString());
+      _animator.SetTrigger(MoveTriggers.Jump.ToString());
       _grounded = false;
-      _animator.SetBool(Constants.MoveTriggers.Grounded.ToString(), _grounded);
+      _animator.SetBool(MoveTriggers.Grounded.ToString(), _grounded);
       _body2d.velocity = new Vector2(_body2d.velocity.x, _jumpForce);
       _groundSensor.Disable(0.2f);
     }
 
     public void CombatIdle() {
-      _animator.SetInteger(Constants.MoveTriggers.AnimState.ToString(), 1);
+      _animator.SetInteger(MoveTriggers.AnimState.ToString(), 1);
     }
 
     private void ChangeCombatPose() {
@@ -164,12 +165,12 @@ namespace Behaviour {
     private void Grounded() {
       if (!_grounded && _groundSensor.State()) {
         _grounded = true;
-        _animator.SetBool(Constants.MoveTriggers.Grounded.ToString(), _grounded);
+        _animator.SetBool(MoveTriggers.Grounded.ToString(), _grounded);
       }
 
       if (_grounded && !_groundSensor.State()) {
         _grounded = false;
-        _animator.SetBool(Constants.MoveTriggers.Grounded.ToString(), _grounded);
+        _animator.SetBool(MoveTriggers.Grounded.ToString(), _grounded);
       }
     }
   }

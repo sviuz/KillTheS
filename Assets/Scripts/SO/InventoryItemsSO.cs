@@ -5,6 +5,6 @@ using UnityEngine;
 namespace SO {
   [CreateAssetMenu(fileName = "InventoryItems", menuName = "InventoryItems", order = 0)]
   public class InventoryItemsSO : ScriptableObject {
-    public List<InventoryItem> list = new List<InventoryItem>();
+    public List<InventoryItem> list;
   }
 }

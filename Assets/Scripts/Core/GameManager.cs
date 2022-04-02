@@ -22,6 +22,7 @@ namespace Core {
       if (Input.GetKeyUp(KeyCode.I)) {
         Inventory.OnChangeVisibility?.Invoke();
       }
+      
     }
   }
 }
