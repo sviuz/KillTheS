@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using InventoryBased;
 using SO;
 using UnityEngine;
 using static Other.Constants;
 using Random = UnityEngine.Random;
 
-namespace Core {
+namespace InventoryBased {
   public class InventoryGenerator : MonoBehaviour {
     public static InventoryGenerator Instance;
     [SerializeField] private InventoryItemsSO _so;
@@ -33,12 +32,7 @@ namespace Core {
       Array values = Enum.GetValues(typeof(ItemType));
       return (ItemType)values.GetValue(Random.Range(0, values.Length - 1));
     }
-    
-    private InventoryItem GenerateRandomItem() {
-      List<InventoryItem> list = _so.list;
-      InventoryItem item = list[Random.Range(0, list.Count - 1)];
 
-      return item;
-    }
+    private InventoryItem GenerateRandomItem() => _so.list[Random.Range(0, _so.list.Count - 1)];
   }
 }

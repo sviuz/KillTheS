@@ -9,7 +9,17 @@ namespace Behaviour.Based {
     [SerializeField] private GameObject _inventoryObject;
     [SerializeField] private bool _visible = true;
     [SerializeField] private List<InventorySlot> _fullInventoryContainers;
-    [SerializeField] private List<InventoryItem> _inventoryItems;
+    [SerializeField] private List<InventoryItem> _fullInventoryItems;
+    [SerializeField] private List<InventoryItem> _quickInventoryItems;
+
+    public List<InventoryItem> QuickInventoryItems {
+      get {
+        return _quickInventoryItems;
+      }
+      set {
+        _quickInventoryItems = value;
+      }
+    }
 
     private void Awake() {
       _visible = InventoryObject.activeSelf;
@@ -42,7 +52,7 @@ namespace Behaviour.Based {
       }
     }
 
-    public List<InventorySlot> InventorySlots {
+    public List<InventorySlot> FullInventorySlots {
       get {
         return _fullInventoryContainers;
       }
@@ -51,12 +61,12 @@ namespace Behaviour.Based {
       }
     }
 
-    public List<InventoryItem> InventoryItems {
+    public List<InventoryItem> FullInventoryItems {
       get {
-        return _inventoryItems;
+        return _fullInventoryItems;
       }
       set {
-        _inventoryItems = value;
+        _fullInventoryItems = value;
       }
     }
   }

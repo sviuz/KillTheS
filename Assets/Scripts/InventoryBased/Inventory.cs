@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using Behaviour;
 using Behaviour.Based;
+using Other;
 using UnityEngine;
 
 namespace InventoryBased {
   public class Inventory : MonoBehaviour {
     public static Action OnChangeVisibility;
     public static Action<List<InventoryItem>> OnSetContainerList;
+    public static Action<InventoryItem> OnMoveItem;
 
     [SerializeField] private InventoryContainer _container;
 
     private void Awake() {
       OnChangeVisibility += ShowInventory;
       OnSetContainerList += SetContainerList;
+      OnMoveItem += MoveItem;
     }
 
     private void Start() {
@@ -23,6 +26,7 @@ namespace InventoryBased {
     private void OnDestroy() {
       OnChangeVisibility -= ShowInventory;
       OnSetContainerList -= SetContainerList;
+      OnMoveItem -= MoveItem;
     }
 
     private void Update() {
@@ -52,18 +56,27 @@ namespace InventoryBased {
       _container.Visible = true;
       _container.InventoryCanvasGroup.blocksRaycasts = true;
       _container.InventoryObject.SetActive(true);
-      SetContainerList(InventoryStorage.instance.GetMyContainer());
     }
 
     private void SetContainerList(List<InventoryItem> list) {
       if (list == null) return;
       
-      _container.InventoryItems = list;
+      _container.FullInventoryItems = list;
 
-      for (int index = 0; index < _container.InventoryItems.Count; index++) {
-        var item = _container.InventoryItems[index];
+      for (int index = 0; index < _container.FullInventoryItems.Count; index++) {
+        var item = _container.FullInventoryItems[index];
         var obj = Instantiate(item, Vector3.zero, Quaternion.identity);
-        _container.InventorySlots[index].SetObject(obj, false);
+        _container.FullInventorySlots[index].SetObject(obj, false);
+      }
+    }
+
+    private void MoveItem(InventoryItem item) {
+      if (item.GetItemType() == Constants.InventoryType.FullInventory) {
+        _container.FullInventoryItems.Remove(item);
+        _container.QuickInventoryItems.Add(item);
+      } else {
+        _container.QuickInventoryItems.Remove(item);
+        _container.FullInventoryItems.Add(item);
       }
     }
   }

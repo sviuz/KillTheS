@@ -20,15 +20,16 @@ namespace InventoryBased {
       _item = item;
       if (parentContainter.childCount > 0) return;
 
-      Transform it = item.transform;
+      Transform it = _item.transform;
       it.SetParent(parentContainter);
       if (anim) {
         it.DOLocalMove(Vector3.zero, .1f);
       } else {
-        // it.localPosition = Vector3.zero;
+        it.localPosition = Vector3.zero;
       }
       
-      item.ChangeInventoryType(_type);
+      Inventory.OnMoveItem?.Invoke(_item);
+      _item.ChangeInventoryType(_type);
     }
   }
 }

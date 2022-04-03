@@ -4,10 +4,9 @@ using InventoryBased;
 
 namespace Other {
   public static class Constants {
-    public delegate void AddItemToInventory(InventoryItem item);
-    public delegate bool RemoveItemFromQuickListEvent(int index);
 
-    public static string MyInventory = nameof(MyInventory);
+    public static string SavedFullInventory = nameof(SavedFullInventory);
+    public static string SavedQuickInventory = nameof(SavedQuickInventory);
 
     public enum ItemType {
       Food,
