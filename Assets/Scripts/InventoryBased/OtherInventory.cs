@@ -16,10 +16,6 @@ namespace InventoryBased {
       OnChangeVisibility += ShowInventory;
     }
 
-    private void Start() {
-      ShowInventory();
-    }
-
     private void OnDestroy() {
       OnSetContainerList -= SetContainerList;
       OnChangeVisibility -= ShowInventory;
