@@ -21,19 +21,20 @@ namespace Behaviour {
     private Sprite _deathSprite;
     [SerializeField]
     private Slider _hpSlider;
-    
+
     private Vector2 _patrolLeft;
     private Vector2 _patrolRight;
     private float _patrolRadius = 3f;
     private Sequence patrollingCoroutine;
     private Coroutine _attackCoroutine;
-    
+
     private void Awake() {
       CheckForNull();
     }
-    
+
     private void Start() {
-      Move();
+      isPatrolling = true;
+      Patrol();
     }
 
     private void CheckForNull() {
@@ -55,14 +56,15 @@ namespace Behaviour {
     }
 
     private void OnCollisionEnter2D(Collision2D col) {
+      print($"{col.transform.name}, {isAlive.ToString()}");
       if (col.transform.name != Constants.Tags.Player) return;
       if (!isAlive) return;
-      
+
       Attack();
     }
 
     private void OnCollisionExit2D(Collision2D other) {
-      if (_attackCoroutine!=null) {
+      if (_attackCoroutine != null) {
         StopCoroutine(_attackCoroutine);
       }
 
@@ -70,16 +72,8 @@ namespace Behaviour {
       Move();
     }
 
-    private void DropItemAfterDeath() {
-      // var item = 
-    }
-
     #region Interface relization
-    public void Move(float values = 0) {
-      if (isPatrolling) {
-        Patrol();
-      }
-    }
+    public void Move(float values = 0) { }
 
     public void Attack() {
       Collider2D enemy = Physics2D.OverlapCircle(AttackPosition.position, AttackRange, Mask);
@@ -94,7 +88,7 @@ namespace Behaviour {
         try {
           var e = collider.GetComponent<PlayerMovement>();
           if (!e.isAlive) yield break;
-          
+
           e.Hurt(AttackPoints);
           _animator.Play("Attack");
         }
@@ -105,7 +99,7 @@ namespace Behaviour {
         yield return new WaitForSeconds(1f);
       }
     }
-    
+
     public void Idle() { }
 
     public void Hurt(int value) {
@@ -113,12 +107,12 @@ namespace Behaviour {
       Health -= value;
       _animator.SetTrigger("Damage");
       DOSetHp();
-      
+
       if (Health < value) {
         _animator.SetTrigger("Damage");
         Health = 0;
         DOSetHp();
-        Invoke(nameof(Death), .3f); 
+        Invoke(nameof(Death), .3f);
       }
     }
 
@@ -128,7 +122,7 @@ namespace Behaviour {
       _animator.Play("Death");
       _boxCollider2D.enabled = false;
       _rigidbody2D.bodyType = RigidbodyType2D.Static;
-      _spriteRenderer.sprite = _deathSprite; 
+      _spriteRenderer.sprite = _deathSprite;
       patrollingCoroutine.Kill();
       enabled = false;
     }
@@ -145,22 +139,28 @@ namespace Behaviour {
 
     public void Patrol() {
       if (!isPatrolling) return;
-      
+
       var tr = transform.position;
       _patrolLeft = new Vector2(tr.x - _patrolRadius * 2, tr.y);
       _patrolRight = new Vector2(tr.x, tr.y);
       _spriteRenderer.flipX = true;
       patrollingCoroutine = DOTween.Sequence();
-      patrollingCoroutine.AppendInterval(3f).Append(transform.DOMoveX(_patrolLeft.x, 3f).SetEase(Ease.Linear).OnStart(
-        () => { _animator.Play("SkeletonRun"); }).OnComplete(() => {
-                                                               _animator.Play("Idle");
-                                                               _spriteRenderer.flipX = !_spriteRenderer.flipX;
-                                                             }));
-      patrollingCoroutine.AppendInterval(3f).Append(transform.DOMoveX(_patrolRight.x, 3f).SetEase(Ease.Linear).OnStart(
-        () => { _animator.Play("SkeletonRun"); }).OnComplete(() => {
-                                                               _animator.Play("Idle");
-                                                               _spriteRenderer.flipX = !_spriteRenderer.flipX;
-                                                             }));
+      patrollingCoroutine.AppendInterval(3).Append(transform.DOMoveX(_patrolLeft.x, 3f).SetEase(Ease.Linear).OnStart(
+        () => {
+          print("SkeletonRun");
+          _animator.Play("SkeletonRun");
+        }).OnComplete(() => {
+                        _animator.Play("Idle");
+                        _spriteRenderer.flipX = !_spriteRenderer.flipX;
+                      }));
+      patrollingCoroutine.AppendInterval(3).Append(transform.DOMoveX(_patrolRight.x, 3f).SetEase(Ease.Linear).OnStart(
+        () => {
+          print("SkeletonRun");
+          _animator.Play("SkeletonRun");
+        }).OnComplete(() => {
+                        _animator.Play("Idle");
+                        _spriteRenderer.flipX = !_spriteRenderer.flipX;
+                      }));
       patrollingCoroutine.SetLoops(-1);
       patrollingCoroutine.Play();
     }
