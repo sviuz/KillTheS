@@ -10,6 +10,8 @@ namespace Ui.Auth {
   public class AuthenticationMenu : MonoBehaviour {
     [SerializeField] private AuthenticationMenuContainer _container;
 
+    private bool login = true;
+    
     private void Awake() {
       if (_container == null) {
         _container = GetComponent<AuthenticationMenuContainer>();
