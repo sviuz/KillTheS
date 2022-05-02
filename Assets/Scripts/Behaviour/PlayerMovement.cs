@@ -1,21 +1,18 @@
 ﻿using System;
 using Behaviour.Based;
 using Behaviour.GameActions;
-using Ui.Dialogs;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
-using static Other.Constants;
+using static Other.Constants.Constants;
 
 namespace Behaviour {
-  public class PlayerMovement : SubjectParameters,
-    IPlayerBehavior {
+  public class PlayerMovement : SubjectParameters {
     public static Action<bool> OnSetMovement;
     [SerializeField]
     private float _jumpForce = 7.5f;
     [SerializeField]
     private Sensor_Bandit _groundSensor;
-    [SerializeField]
-    private Image test;
 
     private Action OnDialogueStart;
 
@@ -25,7 +22,6 @@ namespace Behaviour {
     private bool _grounded;
     private bool _combatIdle;
     private bool _isDead;
-    private bool _showDialogue;
     private bool _move = true;
 
     private Vector2 _defaultBoxColliderX = new Vector2(0.8f, 1.5f);
@@ -50,21 +46,23 @@ namespace Behaviour {
       Move(inputX);
       MainBehaviour(inputX);
     }
-    
+
     private void OnTriggerEnter2D(Collider2D col) {
-      if (col.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
-        print(nameof(OnTriggerEnter2D));
-        OnDialogueStart += dialogueTrigger.OnTrigger;
-        dialogueTrigger.OnShowPopUp?.Invoke();
-      }
+      if (!col.TryGetComponent(out DialogueTrigger dialogueTrigger)) return;
+
+      print(nameof(OnTriggerEnter2D));
+      OnDialogueStart += dialogueTrigger.OnTrigger;
+      dialogueTrigger.OnShowPopUp?.Invoke();
     }
 
     private void OnTriggerExit2D(Collider2D other) {
-      if (other.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
-        print(nameof(OnTriggerExit2D));
-        OnDialogueStart -= dialogueTrigger.OnTrigger;
-        dialogueTrigger.OnHidePopUp?.Invoke();
+      if (!other.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
+        return;
       }
+
+      print(nameof(OnTriggerExit2D));
+      OnDialogueStart -= dialogueTrigger.OnTrigger;
+      dialogueTrigger.OnHidePopUp?.Invoke();
     }
 
     private void MainBehaviour(float value) {
@@ -93,7 +91,7 @@ namespace Behaviour {
       OnDialogueStart?.Invoke();
     }
 
-    public void Move(float inputX) {
+    private void Move(float inputX) {
       if (inputX > 0) {
         transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
       } else if (inputX < 0) {
@@ -105,56 +103,48 @@ namespace Behaviour {
       _animator.SetFloat(nameof(MoveTriggers.AirSpeed), _body2d.velocity.y);
     }
 
-    public void Move() {
+    private void Move() {
       _animator.SetInteger(nameof(MoveTriggers.AnimState), 2);
     }
 
-    public void Attack() {
+    private void Attack() {
       _animator.SetTrigger(nameof(MoveTriggers.Attack));
-      Invoke(nameof(Hit), .15f);
     }
 
+    [UsedImplicitly]
     private void Hit() {
       Collider2D enemy = Physics2D.OverlapCircle(AttackPosition.position, AttackRange, Mask);
-      if (enemy) {
-        try {
-          var e = enemy.GetComponent<EnemyObject>();
-          if (e.isAlive) {
-            e.Hurt(AttackPoints);
-          }
-        }
-        catch (Exception e) {
-          Console.WriteLine("Enemy is already dead.");
-          throw;
-        }
-      }
+      if (!enemy) return;
+      
+      enemy.TryGetComponent(out Health.Health _health);
+      _health.TakeDamage(10);
     }
 
-    public void Idle() {
-      _animator.SetInteger(MoveTriggers.AnimState.ToString(), 0);
+    private void Idle() {
+      _animator.SetInteger(nameof(MoveTriggers.AnimState), 0);
     }
 
     public void Hurt(int value) {
-      _animator.SetTrigger(MoveTriggers.Hurt.ToString());
+      _animator.SetTrigger(nameof(MoveTriggers.Hurt));
     }
 
     public void Death() {
       _animator.SetTrigger(!_isDead
-        ? MoveTriggers.Death.ToString()
-        : MoveTriggers.Recover.ToString());
+        ? nameof(MoveTriggers.Death)
+        : nameof(MoveTriggers.Recover));
       _isDead = !_isDead;
     }
 
-    public void Jump() {
-      _animator.SetTrigger(MoveTriggers.Jump.ToString());
+    private void Jump() {
+      _animator.SetTrigger(nameof(MoveTriggers.Jump));
       _grounded = false;
-      _animator.SetBool(MoveTriggers.Grounded.ToString(), _grounded);
+      _animator.SetBool(nameof(MoveTriggers.Grounded), _grounded);
       _body2d.velocity = new Vector2(_body2d.velocity.x, _jumpForce);
       _groundSensor.Disable(0.2f);
     }
 
-    public void CombatIdle() {
-      _animator.SetInteger(MoveTriggers.AnimState.ToString(), 1);
+    private void CombatIdle() {
+      _animator.SetInteger(nameof(MoveTriggers.AnimState), 1);
     }
 
     private void ChangeCombatPose() {

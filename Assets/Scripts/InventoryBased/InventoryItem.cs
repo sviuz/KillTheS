@@ -4,7 +4,7 @@ using SO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static Other.Constants;
+using static Other.Constants.Constants;
 
 namespace InventoryBased {
   public class InventoryItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler {

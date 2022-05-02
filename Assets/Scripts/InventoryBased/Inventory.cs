@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Behaviour;
 using Behaviour.Based;
 using Other;
+using Other.Constants;
 using UnityEngine;
 
 namespace InventoryBased {

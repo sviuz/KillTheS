@@ -5,6 +5,7 @@ using Core;
 using DG.Tweening;
 using InventoryBased;
 using Other;
+using Other.Constants;
 using UnityEngine;
 
 namespace Behaviour.Objects {

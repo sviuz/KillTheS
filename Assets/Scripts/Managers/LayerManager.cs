@@ -1,5 +1,6 @@
 ﻿using System;
 using Other;
+using Other.Constants;
 using UnityEngine;
 
 namespace Managers {

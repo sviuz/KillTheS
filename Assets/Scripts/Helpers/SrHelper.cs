@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using static Other.Constants;
+using static Other.Constants.Constants;
 
 namespace Helpers {
   public class SrHelper : MonoBehaviour {

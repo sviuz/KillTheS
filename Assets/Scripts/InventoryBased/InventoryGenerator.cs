@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SO;
 using UnityEngine;
-using static Other.Constants;
+using static Other.Constants.Constants;
 using Random = UnityEngine.Random;
 
 namespace InventoryBased {

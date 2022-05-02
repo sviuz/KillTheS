@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Other;
+using Other.Constants;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

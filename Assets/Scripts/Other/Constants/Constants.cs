@@ -1,4 +1,4 @@
-﻿namespace Other {
+﻿namespace Other.Constants {
   public static class Constants {
     public const string UPPER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public const string LOWER_CHARS = "abcdefjhijklmnopqrstuvwxyz";
@@ -7,6 +7,13 @@
     public static string SavedQuickInventory = nameof(SavedQuickInventory);
     public const string TRUE = "true";
     public const string FALSE = "false";
+    
+    public enum State {
+      walking,
+      hit,
+      dead
+    }
+    
     public enum ItemType {
       Food,
       Poison,
