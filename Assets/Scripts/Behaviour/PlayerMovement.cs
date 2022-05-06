@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Xml.Schema;
 using Behaviour.Based;
-using Behaviour.GameActions;
+using Behaviour.Objects;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.UI;
 using static Other.Constants.Constants;
 
 namespace Behaviour {
@@ -13,9 +13,7 @@ namespace Behaviour {
     private float _jumpForce = 7.5f;
     [SerializeField]
     private Sensor_Bandit _groundSensor;
-
-    private Action OnDialogueStart;
-
+    
     private Animator _animator;
     private Rigidbody2D _body2d;
     private BoxCollider2D _boxCollider;
@@ -47,24 +45,6 @@ namespace Behaviour {
       MainBehaviour(inputX);
     }
 
-    private void OnTriggerEnter2D(Collider2D col) {
-      if (!col.TryGetComponent(out DialogueTrigger dialogueTrigger)) return;
-
-      print(nameof(OnTriggerEnter2D));
-      OnDialogueStart += dialogueTrigger.OnTrigger;
-      dialogueTrigger.OnShowPopUp?.Invoke();
-    }
-
-    private void OnTriggerExit2D(Collider2D other) {
-      if (!other.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
-        return;
-      }
-
-      print(nameof(OnTriggerExit2D));
-      OnDialogueStart -= dialogueTrigger.OnTrigger;
-      dialogueTrigger.OnHidePopUp?.Invoke();
-    }
-
     private void MainBehaviour(float value) {
       if (Input.GetMouseButtonDown(0)) {
         Attack();
@@ -76,8 +56,6 @@ namespace Behaviour {
         Move();
       } else if (_combatIdle) {
         CombatIdle();
-      } else if (Input.GetKeyUp(KeyCode.E)) {
-        ExecuteDialogue();
       } else {
         Idle();
       }
@@ -86,11 +64,6 @@ namespace Behaviour {
     private void SetMovement(bool status) {
       _move = status;
     }
-
-    private void ExecuteDialogue() {
-      OnDialogueStart?.Invoke();
-    }
-
     private void Move(float inputX) {
       if (inputX > 0) {
         transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
@@ -113,18 +86,21 @@ namespace Behaviour {
 
     [UsedImplicitly]
     private void Hit() {
-      Collider2D enemy = Physics2D.OverlapCircle(AttackPosition.position, AttackRange, Mask);
-      if (!enemy) return;
-      
-      enemy.TryGetComponent(out Health.Health _health);
-      _health.TakeDamage(10);
+      Collider2D enemy = Physics2D.OverlapCircle(AttackPosition.position, AttackRange);
+      if (enemy.TryGetComponent(out Health.Health _health)) {
+        _health.TakeDamage(10);
+        return;
+      }
+      if (enemy.TryGetComponent<Chest>(out Chest chest)) {
+        chest.BrokeChest();
+      }
     }
 
     private void Idle() {
       _animator.SetInteger(nameof(MoveTriggers.AnimState), 0);
     }
 
-    public void Hurt(int value) {
+    public void Hurt() {
       _animator.SetTrigger(nameof(MoveTriggers.Hurt));
     }
 

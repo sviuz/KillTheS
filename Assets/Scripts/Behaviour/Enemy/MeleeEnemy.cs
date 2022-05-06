@@ -33,7 +33,7 @@ namespace Behaviour.Enemy {
       if (PlayerInSight()) {
         if (cooldownTimer >= attackCooldown) {
           cooldownTimer = 0;
-          anim.SetTrigger(EnemyConstants.Attack);
+          anim.SetTrigger(ObjectConstants.Attack);
         }
       }
 

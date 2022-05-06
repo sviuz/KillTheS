@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 8937281494084279404}
   - component: {fileID: 9099232397935857372}
   - component: {fileID: 9091675078326612526}
+  - component: {fileID: 458610662}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -197,10 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba8b435a8dc3f604e9a13c4acd7081c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 100
-  AttackPoints: 10
   Speed: 5
-  isAlive: 1
   AttackPosition: {fileID: 363191273}
   AttackRange: 0.5
   Mask:
@@ -208,7 +206,6 @@ MonoBehaviour:
     m_Bits: 8
   _jumpForce: 7.5
   _groundSensor: {fileID: 9182221760414945228}
-  test: {fileID: 0}
 --- !u!95 &9198391108515482386
 Animator:
   serializedVersion: 3
@@ -298,7 +295,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &9091675078326612526
 BoxCollider2D:
@@ -326,3 +323,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8, y: 1.5}
   m_EdgeRadius: 0
+--- !u!114 &458610662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9147798266089991704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f53d9210d5e44d78f7eb0b6e6ab9125, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingHealth: 100
+  components: []

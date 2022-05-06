@@ -36,11 +36,11 @@ namespace Behaviour.Enemy {
     }
 
     private void OnDisable() {
-      _anim.SetBool(EnemyConstants.Move, false);
+      _anim.SetBool(ObjectConstants.Move, false);
     }
 
     private void DirectionChange() {
-      _anim.SetBool(EnemyConstants.Move, false);
+      _anim.SetBool(ObjectConstants.Move, false);
       _idleTimer += Time.deltaTime;
 
       if (_idleTimer > _idleDuration) {
@@ -50,7 +50,7 @@ namespace Behaviour.Enemy {
 
     private void MoveInDirection(int _direction) {
       _idleTimer = 0;
-      _anim.SetTrigger(EnemyConstants.Move);
+      _anim.SetTrigger(ObjectConstants.Move);
 
       _enemy.localScale = new Vector3(Mathf.Abs(_initScale.x) * _direction * _facingDirection,
         _initScale.y, _initScale.z);
