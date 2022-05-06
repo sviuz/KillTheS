@@ -11961,7 +11961,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec90286e40d96e3428b4de3e9eaecb6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enterDetector: {fileID: 1477989074}
 --- !u!212 &1331121556
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -13612,6 +13611,10 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8731064917795236303, guid: b18dcd3ee86986b469e9cfc64055704c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 966309f035b9a674a901092d8f808d4c, type: 2}
     - target: {fileID: 8880890977455105450, guid: b18dcd3ee86986b469e9cfc64055704c, type: 3}
       propertyPath: m_SortingOrder
       value: 2

@@ -87,12 +87,8 @@ namespace Behaviour {
     [UsedImplicitly]
     private void Hit() {
       Collider2D enemy = Physics2D.OverlapCircle(AttackPosition.position, AttackRange);
-      if (enemy.TryGetComponent(out Health.Health _health)) {
+      if (enemy.TryGetComponent(out Health.Health _health) && enemy.CompareTag("Enemy")) {
         _health.TakeDamage(10);
-        return;
-      }
-      if (enemy.TryGetComponent<Chest>(out Chest chest)) {
-        chest.BrokeChest();
       }
     }
 
