@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3053077673656270831}
   - component: {fileID: 3053077673656270829}
   - component: {fileID: 3053077673656270828}
-  - component: {fileID: 3053077673656270826}
   - component: {fileID: 3053077673656270824}
   m_Layer: 5
   m_Name: Item_Potion_v1
@@ -30,7 +29,6 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -78,18 +76,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3053077673656270826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3053077673656270830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2a70edcd1c44256b118f225f818e329, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!225 &3053077673656270824
 CanvasGroup:
   m_ObjectHideFlags: 0

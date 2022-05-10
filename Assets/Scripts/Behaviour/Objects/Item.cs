@@ -1,19 +1,20 @@
 ﻿using Behaviour.Based.Interfaces;
-using DG.Tweening;
 using UnityEngine;
 
 namespace Behaviour.Objects {
   public class Item : MonoBehaviour, IPickable {
     [SerializeField] private ParticleSystem _particleSystem;
-    
-    public void Pick() {
-      var sq = DOTween.Sequence();
-      //TODO animation;
-      sq.OnComplete(() => _particleSystem.Play());
+
+    public virtual void Pick(Vector3 position) {
+      Debug.Log("Add health");
     }
 
-    public void Drop() {
-      
+    public void Drop(Vector3 position) {
+      transform.position = position;
+    }
+
+    protected virtual void Destroy() {
+      Destroy(gameObject);
     }
   }
 }

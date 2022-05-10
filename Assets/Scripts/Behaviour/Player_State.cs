@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 namespace Behaviour {
-	public class Sensor_Bandit : MonoBehaviour {
+	public class Player_State : MonoBehaviour {
 		private int _сolCount = 0;
 		private float _disableTimer;
 

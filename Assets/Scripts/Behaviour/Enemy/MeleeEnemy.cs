@@ -1,25 +1,20 @@
-﻿using JetBrains.Annotations;
+﻿using Behaviour.HealthItem;
+using JetBrains.Annotations;
 using Other.Constants;
 using UnityEngine;
 
 namespace Behaviour.Enemy {
   public class MeleeEnemy : MonoBehaviour {
-    [Header("Attack Parameters")]
     [SerializeField] private float attackCooldown;
     [SerializeField] private float range;
     [SerializeField] private int damage;
-
-    [Header("Collider Parameters")]
     [SerializeField] private float colliderDistance;
     [SerializeField] private BoxCollider2D boxCollider;
-
-    [Header("Player Layer")]
     [SerializeField] private LayerMask playerLayer;
     private float cooldownTimer = Mathf.Infinity;
 
-    //References
     private Animator anim;
-    private Health.Health playerHealth;
+    private Health playerHealth;
     private EnemyMovement enemyPatrol;
 
     private void Awake() {
@@ -49,7 +44,7 @@ namespace Behaviour.Enemy {
       RaycastHit2D hit = Physics2D.BoxCast(originVector, sizeVector, 0, Vector2.left, 0, playerLayer);
 
       if (hit.collider != null) {
-        playerHealth = hit.transform.GetComponent<Health.Health>();
+        playerHealth = hit.transform.GetComponent<PlayerHealth>();
       }
 
       return hit.collider != null;

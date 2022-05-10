@@ -4,13 +4,13 @@ using Other;
 using UnityEngine;
 
 namespace Core {
-  public class PlayerData : Singleton<PlayerData> {
-    private void GetUser(out User user) {
+  public static class PlayerData {
+    private static void GetUser(out User user) {
       var json = PlayerPrefs.GetString(PlayerConstants.PlayerData);
       user = JsonConvert.DeserializeObject<User>(json);
     }
     
-    public string GetUsername() {
+    public static string GetUsername() {
       GetUser(out User user);
       return user.username;
     }

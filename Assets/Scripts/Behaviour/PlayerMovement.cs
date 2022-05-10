@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Xml.Schema;
 using Behaviour.Based;
+using Behaviour.HealthItem;
 using Behaviour.Objects;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -12,8 +12,8 @@ namespace Behaviour {
     [SerializeField]
     private float _jumpForce = 7.5f;
     [SerializeField]
-    private Sensor_Bandit _groundSensor;
-    
+    private Player_State _groundSensor;
+
     private Animator _animator;
     private Rigidbody2D _body2d;
     private BoxCollider2D _boxCollider;
@@ -21,6 +21,7 @@ namespace Behaviour {
     private bool _combatIdle;
     private bool _isDead;
     private bool _move = true;
+    private bool _attack;
 
     private Vector2 _defaultBoxColliderX = new Vector2(0.8f, 1.5f);
     private Vector2 _defendedBoxColliderX = new Vector2(2f, 1.5f);
@@ -64,6 +65,7 @@ namespace Behaviour {
     private void SetMovement(bool status) {
       _move = status;
     }
+
     private void Move(float inputX) {
       if (inputX > 0) {
         transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
@@ -81,14 +83,32 @@ namespace Behaviour {
     }
 
     private void Attack() {
+      if (_attack) return;
+
+      _attack = true;
       _animator.SetTrigger(nameof(MoveTriggers.Attack));
+    }
+
+    [UsedImplicitly]//used in animations
+    public void ReturnState() {
+      _attack = false;
     }
 
     [UsedImplicitly]
     private void Hit() {
-      Collider2D enemy = Physics2D.OverlapCircle(AttackPosition.position, AttackRange);
-      if (enemy.TryGetComponent(out Health.Health _health) && enemy.CompareTag("Enemy")) {
-        _health.TakeDamage(10);
+      Collider2D[] cols = Physics2D.OverlapCircleAll(AttackPosition.position, AttackRange);
+      if (cols.Length == 0) return;
+
+      for (int i = 0; i < cols.Length; i++) {
+        if (cols[i].TryGetComponent(out EnemyHealth _health)) {
+          _health.TakeDamage(10);
+        }
+      }
+
+      for (int i = 0; i < cols.Length; i++) {
+        if (cols[i].TryGetComponent(out Chest _chest)) {
+          _chest.BrokeChest();
+        }
       }
     }
 
@@ -127,12 +147,19 @@ namespace Behaviour {
     private void Grounded() {
       if (!_grounded && _groundSensor.State()) {
         _grounded = true;
-        _animator.SetBool(MoveTriggers.Grounded.ToString(), _grounded);
+        _animator.SetBool(nameof(MoveTriggers.Grounded), _grounded);
       }
 
-      if (_grounded && !_groundSensor.State()) {
-        _grounded = false;
-        _animator.SetBool(MoveTriggers.Grounded.ToString(), _grounded);
+      if (!_grounded || _groundSensor.State()) return;
+
+      _grounded = false;
+      _animator.SetBool(nameof(MoveTriggers.Grounded), _grounded);
+    }
+
+    private void OnTriggerEnter2D(Collider2D col) {
+      if (col.TryGetComponent(out Objects.Items.HealthItem item)) {
+        Debug.Log(item.name);
+        item.Pick(transform.position);
       }
     }
   }
