@@ -12,7 +12,7 @@ namespace Ui.NoInternetConnection {
       _retryButton.onClick.AddListener(Retry);
     }
 
-    private void Retry() {
+    private static void Retry() {
       if (Application.internetReachability != NetworkReachability.NotReachable) {
         SceneManager.LoadScene("Authorization");
       }
