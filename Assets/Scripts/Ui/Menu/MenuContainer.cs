@@ -9,7 +9,27 @@ namespace Ui.Menu {
     [SerializeField] private Button _settingsButton;
     [SerializeField] private Button _logoutButton;
     [SerializeField] private Button _soundButton;
+    [SerializeField] private Button _exitGameButton;
     [SerializeField] private TMP_Text _usernameTMP;
+    public Button ExitGameButton {
+      get {
+        return _exitGameButton;
+      }
+      set {
+        _exitGameButton = value;
+      }
+    }
+
+    public bool Show {
+      get {
+        return _show;
+      }
+      set {
+        _show = value;
+      }
+    }
+
+    
 
     private bool _show = true;
     #endregion

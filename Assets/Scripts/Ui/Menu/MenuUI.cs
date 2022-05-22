@@ -1,5 +1,7 @@
 ﻿using System;
 using Core;
+using Core.Player;
+using Other;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,9 +13,15 @@ namespace Ui.Menu {
       _container.PlayButton.onClick.AddListener(PlayButtonClick);
       string username = PlayerData.GetUsername();
       
-      print(username);
       _container.UsernameTMP.SetText(username);
       _container.SettingsButton.onClick.AddListener(SettingsButtonClick);
+      _container.ExitGameButton.onClick.AddListener(Application.Quit);
+      _container.LogoutButton.onClick.AddListener(LogOutClick);
+    }
+
+    private static void LogOutClick() {
+      PlayerDataSaver.LogOut();
+      SceneManager.LoadScene("Authorization");
     }
 
     private void SettingsButtonClick() {
