@@ -1,4 +1,5 @@
 ﻿using Behaviour.Enemy;
+using Level;
 
 namespace Behaviour.HealthItem {
   public class EnemyHealth : Health {
@@ -10,6 +11,7 @@ namespace Behaviour.HealthItem {
     }
 
     public override void Dead() {
+      Goal.Instance.IncreaseCurrentGoal();
       base.Dead();
       _slider.gameObject.SetActive(false);
       _enemyMovement.Dead();

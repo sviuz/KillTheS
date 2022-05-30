@@ -13,6 +13,7 @@ namespace Firebase {
     private FirebaseDatabase _database;
     private DatabaseReference _databaseReference;
     private readonly List<string> _listOfUsernames = new List<string>();
+    private readonly List<string> _listOfPassword = new List<string>();
 
     private void Awake() {
       if (Instance == null) {
@@ -41,6 +42,10 @@ namespace Firebase {
       return _listOfUsernames;
     }
 
+    public List<string> GetListOfPasswords() {
+      return _listOfPassword;
+    }
+
     private void GetInternalUsernames() {
       _database ??= FirebaseDatabase.DefaultInstance;
       _database.GetReference("Users/").GetValueAsync().ContinueWith(ContinuationFunction());
@@ -54,6 +59,14 @@ namespace Firebase {
                snapshot.Children.ToList()
                  .ForEach(
                    child => _listOfUsernames.Add(child.Key));
+               snapshot.Children.ToList()
+                 .ForEach(
+                   child =>
+                     child.Children.ToList().ForEach(_value => {
+                                                       if (_value.Key == "password") {
+                                                         _listOfPassword.Add(_value.Value.ToString());
+                                                       }
+                                                     }));
              };
     }
   }

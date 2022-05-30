@@ -1,23 +1,14 @@
-﻿using System;
-using UnityEngine;
+﻿using Core;
 
 namespace Level {
-  public class Goal : MonoBehaviour {
-    public static Action OnGoal;
-    [SerializeField] private int _goal;
+  public class Goal : Singleton<Goal> {
+    public int _goal = 2;
+    public int _currentGoal;
 
-    private int _currentGoal;
-    
-    private void Awake() {
-      OnGoal += IncreaseCurrentGoal;
-    }
-
-    private void IncreaseCurrentGoal() {
+    public void IncreaseCurrentGoal() {
       _currentGoal++;
-
-      if (_currentGoal == _goal) {
-        LevelManager.OnWin?.Invoke();
-      }
     }
+
+    public bool IsAbleToWin() => _goal == _currentGoal;
   }
 }

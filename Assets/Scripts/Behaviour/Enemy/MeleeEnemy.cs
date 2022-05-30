@@ -51,7 +51,7 @@ namespace Behaviour.Enemy {
     }
 
     private void OnDrawGizmos() {
-      Gizmos.color = Color.red;
+      Gizmos.color = Color.black;
       var bounds = boxCollider.bounds;
       var center = bounds.center + transform.right * range * transform.localScale.x * colliderDistance;
       var size = new Vector3(bounds.size.x * range, bounds.size.y, bounds.size.z);

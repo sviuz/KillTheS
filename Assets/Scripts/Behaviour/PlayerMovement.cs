@@ -3,6 +3,8 @@ using Behaviour.Based;
 using Behaviour.HealthItem;
 using Behaviour.Objects;
 using JetBrains.Annotations;
+using Level;
+using Ui.Level;
 using UnityEngine;
 using static Other.Constants.Constants;
 
@@ -126,6 +128,7 @@ namespace Behaviour {
         ? nameof(MoveTriggers.Death)
         : nameof(MoveTriggers.Recover));
       _isDead = !_isDead;
+      LevelUI.Instance.Lose();
     }
 
     private void Jump() {
@@ -161,6 +164,10 @@ namespace Behaviour {
       if (col.TryGetComponent(out Objects.Items.HealthItem item)) {
         Debug.Log(item.name);
         item.Pick(transform.position);
+      }
+
+      if (col.TryGetComponent(out WinObject winObject)) {
+        winObject.Win();
       }
     }
   }
