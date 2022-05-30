@@ -12,7 +12,7 @@ namespace Behaviour {
     [SerializeField]
     private float _jumpForce = 7.5f;
     [SerializeField]
-    private Player_State _groundSensor;
+    private PlayerState _groundSensor;
 
     private Animator _animator;
     private Rigidbody2D _body2d;
@@ -47,6 +47,7 @@ namespace Behaviour {
     }
 
     private void MainBehaviour(float value) {
+      
       if (Input.GetMouseButtonDown(0)) {
         Attack();
       } else if (Input.GetKeyDown(KeyCode.Mouse1)) {

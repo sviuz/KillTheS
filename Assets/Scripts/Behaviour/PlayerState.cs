@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 namespace Behaviour {
-	public class Player_State : MonoBehaviour {
+	public class PlayerState : MonoBehaviour {
 		private int _сolCount = 0;
 		private float _disableTimer;
 
