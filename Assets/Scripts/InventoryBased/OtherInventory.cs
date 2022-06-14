@@ -10,13 +10,10 @@ namespace InventoryBased {
     public static Action OnChangeVisibility;
     [SerializeField] private InventoryContainer _container;
 
+    private bool isOpen;
     private void Awake() {
-      OnSetContainerList += OnSetContainerList;
+      OnSetContainerList += SetContainerList;
       OnChangeVisibility += ShowInventory;
-    }
-
-    private void Start() {
-      ShowInventory();
     }
 
     private void OnDestroy() {
@@ -37,24 +34,25 @@ namespace InventoryBased {
       _container.Visible = true;
       _container.InventoryCanvasGroup.blocksRaycasts = true;
       _container.InventoryObject.SetActive(true);
-      SetContainerList(InventoryStorage.instance.GetMyContainer());
     }
     
     private void SetContainerList(List<InventoryItem> list) {
+      if (isOpen) return;
       if (list == null) return;
       
-      _container.InventoryItems = list;
+      _container.FullInventoryItems = list;
 
-      if (_container.InventorySlots.Count==0) {
+      if (_container.FullInventorySlots.Count==0) {
         throw new NullReferenceException("InventorySlots are empty");
-        return;
       }
       
-      for (int index = 0; index < _container.InventoryItems.Count; index++) {
-        var item = _container.InventoryItems[index];
+      for (int index = 0; index < _container.FullInventoryItems.Count; index++) {
+        var item = _container.FullInventoryItems[index];
         var obj = Instantiate(item, Vector3.zero, Quaternion.identity);
-        _container.InventorySlots[index].SetObject(obj, false);
+        _container.FullInventorySlots[index].SetObject(obj, false);
       }
+
+      isOpen = false;
     }
   }
 }

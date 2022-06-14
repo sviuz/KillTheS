@@ -5,6 +5,6 @@ using UnityEngine;
 namespace SO {
   [CreateAssetMenu(fileName = "Enemies", order = 0)]
   public class EnemiesSO : ScriptableObject {
-    public List<EnemyParameters> enemies;
+    //public List<EnemyParameters> enemies;
   }
 }

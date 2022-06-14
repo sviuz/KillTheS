@@ -1,23 +1,21 @@
 ﻿using System;
 using Behaviour.Based;
-using Behaviour.GameActions;
-using Ui.Dialogs;
+using Behaviour.HealthItem;
+using Behaviour.Objects;
+using JetBrains.Annotations;
+using Level;
+using Ui.Level;
 using UnityEngine;
-using UnityEngine.UI;
-using static Other.Constants;
+using static Other.Constants.Constants;
 
 namespace Behaviour {
-  public class PlayerMovement : SubjectParameters,
-    IPlayerBehavior {
+  public class PlayerMovement : SubjectParameters {
     public static Action<bool> OnSetMovement;
+    public static Action OnDeath;
     [SerializeField]
     private float _jumpForce = 7.5f;
     [SerializeField]
-    private Sensor_Bandit _groundSensor;
-    [SerializeField]
-    private Image test;
-
-    private Action OnDialogueStart;
+    private PlayerState _groundSensor;
 
     private Animator _animator;
     private Rigidbody2D _body2d;
@@ -25,8 +23,8 @@ namespace Behaviour {
     private bool _grounded;
     private bool _combatIdle;
     private bool _isDead;
-    private bool _showDialogue;
     private bool _move = true;
+    private bool _attack;
 
     private Vector2 _defaultBoxColliderX = new Vector2(0.8f, 1.5f);
     private Vector2 _defendedBoxColliderX = new Vector2(2f, 1.5f);
@@ -37,10 +35,12 @@ namespace Behaviour {
       _boxCollider = GetComponent<BoxCollider2D>();
 
       OnSetMovement += SetMovement;
+      OnDeath += Death;
     }
 
     private void OnDestroy() {
       OnSetMovement -= SetMovement;
+      OnDeath -= Death;
     }
 
     private void Update() {
@@ -50,24 +50,9 @@ namespace Behaviour {
       Move(inputX);
       MainBehaviour(inputX);
     }
-    
-    private void OnTriggerEnter2D(Collider2D col) {
-      if (col.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
-        print(nameof(OnTriggerEnter2D));
-        OnDialogueStart += dialogueTrigger.OnTrigger;
-        dialogueTrigger.OnShowPopUp?.Invoke();
-      }
-    }
-
-    private void OnTriggerExit2D(Collider2D other) {
-      if (other.TryGetComponent(out DialogueTrigger dialogueTrigger)) {
-        print(nameof(OnTriggerExit2D));
-        OnDialogueStart -= dialogueTrigger.OnTrigger;
-        dialogueTrigger.OnHidePopUp?.Invoke();
-      }
-    }
 
     private void MainBehaviour(float value) {
+      
       if (Input.GetMouseButtonDown(0)) {
         Attack();
       } else if (Input.GetKeyDown(KeyCode.Mouse1)) {
@@ -78,8 +63,6 @@ namespace Behaviour {
         Move();
       } else if (_combatIdle) {
         CombatIdle();
-      } else if (Input.GetKeyUp(KeyCode.E)) {
-        ExecuteDialogue();
       } else {
         Idle();
       }
@@ -89,11 +72,7 @@ namespace Behaviour {
       _move = status;
     }
 
-    private void ExecuteDialogue() {
-      OnDialogueStart?.Invoke();
-    }
-
-    public void Move(float inputX) {
+    private void Move(float inputX) {
       if (inputX > 0) {
         transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
       } else if (inputX < 0) {
@@ -105,56 +84,65 @@ namespace Behaviour {
       _animator.SetFloat(nameof(MoveTriggers.AirSpeed), _body2d.velocity.y);
     }
 
-    public void Move() {
+    private void Move() {
       _animator.SetInteger(nameof(MoveTriggers.AnimState), 2);
     }
 
-    public void Attack() {
+    private void Attack() {
+      if (_attack) return;
+
+      _attack = true;
       _animator.SetTrigger(nameof(MoveTriggers.Attack));
-      Invoke(nameof(Hit), .15f);
     }
 
+    [UsedImplicitly]//used in animations
+    public void ReturnState() {
+      _attack = false;
+    }
+
+    [UsedImplicitly]
     private void Hit() {
-      Collider2D enemy = Physics2D.OverlapCircle(AttackPosition.position, AttackRange, Mask);
-      if (enemy) {
-        try {
-          var e = enemy.GetComponent<EnemyObject>();
-          if (e.isAlive) {
-            e.Hurt(AttackPoints);
-          }
+      Collider2D[] cols = Physics2D.OverlapCircleAll(AttackPosition.position, AttackRange);
+      if (cols.Length == 0) return;
+
+      for (int i = 0; i < cols.Length; i++) {
+        if (cols[i].TryGetComponent(out EnemyHealth _health)) {
+          _health.TakeDamage(10);
         }
-        catch (Exception e) {
-          Console.WriteLine("Enemy is already dead.");
-          throw;
+      }
+
+      for (int i = 0; i < cols.Length; i++) {
+        if (cols[i].TryGetComponent(out Chest _chest)) {
+          _chest.BrokeChest();
         }
       }
     }
 
-    public void Idle() {
-      _animator.SetInteger(MoveTriggers.AnimState.ToString(), 0);
+    private void Idle() {
+      _animator.SetInteger(nameof(MoveTriggers.AnimState), 0);
     }
 
-    public void Hurt(int value) {
-      _animator.SetTrigger(MoveTriggers.Hurt.ToString());
+    public void Hurt() {
+      _animator.SetTrigger(nameof(MoveTriggers.Hurt));
     }
 
-    public void Death() {
+    private void Death() {
       _animator.SetTrigger(!_isDead
-        ? MoveTriggers.Death.ToString()
-        : MoveTriggers.Recover.ToString());
+        ? nameof(MoveTriggers.Death)
+        : nameof(MoveTriggers.Recover));
       _isDead = !_isDead;
     }
 
-    public void Jump() {
-      _animator.SetTrigger(MoveTriggers.Jump.ToString());
+    private void Jump() {
+      _animator.SetTrigger(nameof(MoveTriggers.Jump));
       _grounded = false;
-      _animator.SetBool(MoveTriggers.Grounded.ToString(), _grounded);
+      _animator.SetBool(nameof(MoveTriggers.Grounded), _grounded);
       _body2d.velocity = new Vector2(_body2d.velocity.x, _jumpForce);
       _groundSensor.Disable(0.2f);
     }
 
-    public void CombatIdle() {
-      _animator.SetInteger(MoveTriggers.AnimState.ToString(), 1);
+    private void CombatIdle() {
+      _animator.SetInteger(nameof(MoveTriggers.AnimState), 1);
     }
 
     private void ChangeCombatPose() {
@@ -165,12 +153,19 @@ namespace Behaviour {
     private void Grounded() {
       if (!_grounded && _groundSensor.State()) {
         _grounded = true;
-        _animator.SetBool(MoveTriggers.Grounded.ToString(), _grounded);
+        _animator.SetBool(nameof(MoveTriggers.Grounded), _grounded);
       }
 
-      if (_grounded && !_groundSensor.State()) {
-        _grounded = false;
-        _animator.SetBool(MoveTriggers.Grounded.ToString(), _grounded);
+      if (!_grounded || _groundSensor.State()) return;
+
+      _grounded = false;
+      _animator.SetBool(nameof(MoveTriggers.Grounded), _grounded);
+    }
+
+    private void OnTriggerEnter2D(Collider2D col) {
+      if (col.TryGetComponent(out Objects.Items.HealthItem item)) {
+        Debug.Log(item.name);
+        item.Pick(transform.position);
       }
     }
   }

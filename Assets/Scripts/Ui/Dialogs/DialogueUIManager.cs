@@ -1,8 +1,10 @@
 ﻿using Core;
+using Other;
 using UnityEngine;
 
 namespace Ui.Dialogs {
-  public class DialogueUIManager : Singleton<DialogueUIManager> {
+  public class DialogueUIManager : 
+    Singleton<DialogueUIManager> {
     [SerializeField]
     private GameObject _dialogPanel;
 
