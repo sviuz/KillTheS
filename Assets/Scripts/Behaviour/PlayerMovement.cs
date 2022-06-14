@@ -167,10 +167,6 @@ namespace Behaviour {
         Debug.Log(item.name);
         item.Pick(transform.position);
       }
-
-      if (col.TryGetComponent(out WinObject winObject)) {
-        winObject.Win();
-      }
     }
   }
 }

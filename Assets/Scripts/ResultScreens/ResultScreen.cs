@@ -54,8 +54,7 @@ namespace ResultScreens {
     }
 
     private void NextLevelClick() {
-      var index = PlayerPrefs.GetInt("LevelIndex", 0);
-      SceneManager.LoadScene(index);
+      SceneManager.LoadScene(0);
     }
 
     private static void HomeButtonClick() {

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
-using Core;
+using Core.Player;
+using Firebase;
 using Level;
 using Other;
 using ResultScreens;
@@ -25,7 +26,18 @@ namespace Ui.Level {
     }
 
     public void Win() {
+      Debug.Log("WINWINWIN");
       _winWinResultScreen.Win();
+      var index = PlayerPrefs.GetInt("LevelIndex");
+      index++;
+      PlayerPrefs.SetInt("LevelIndex", index);
+      var userData = PlayerDataSaver.LoadData();
+      FirebaseDatabaseManager.Instance.SaveData(
+        userData.id,
+        userData.username,
+        userData.password,
+        index
+      );
     }
 
     public void Lose() {

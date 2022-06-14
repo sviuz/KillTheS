@@ -18,5 +18,11 @@ namespace Core.Player {
       PlayerPrefs.DeleteKey(PlayerConstants.IsLoggedIn);
       PlayerPrefs.DeleteKey(PlayerConstants.PlayerData);
     }
+
+    public static User LoadData() {
+      var json = PlayerPrefs.GetString(PlayerConstants.PlayerData);
+      User user = JsonConvert.DeserializeObject<User>(json);
+      return user;
+    }
   }
 }

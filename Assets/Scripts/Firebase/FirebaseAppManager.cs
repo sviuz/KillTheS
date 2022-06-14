@@ -12,6 +12,7 @@ namespace Firebase {
       } else {
         Destroy(gameObject);
       }
+      DontDestroyOnLoad(gameObject);
     }
 
     private void Start() {

@@ -1,5 +1,6 @@
-﻿using Core;
-using Other;
+﻿using Other;
+using Ui.Level;
+using UnityEngine;
 
 namespace Level {
   public class Goal : Singleton<Goal> {
@@ -8,8 +9,18 @@ namespace Level {
 
     public void IncreaseCurrentGoal() {
       _currentGoal++;
+      IsAbleToWin();
     }
 
-    public bool IsAbleToWin() => _goal == _currentGoal;
+    public void IsAbleToWin() {
+      if (_goal == _currentGoal) {
+        LevelUI.Instance.Win();
+        Debug.Log("WDWAD");
+      }
+
+      if (_currentGoal > _goal) {
+        Debug.Log("WWWWWWWWWWWWWWWWW");
+      }
+    }
   }
 }

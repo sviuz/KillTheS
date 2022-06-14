@@ -21,17 +21,18 @@ namespace Firebase {
       } else {
         Destroy(gameObject);
       }
+      DontDestroyOnLoad(gameObject);
     }
 
     private void Start() {
       GetInternalUsernames();
     }
 
-    public void SaveData(string id, string username, string password) {
+    public void SaveData(string id, string username, string password, int index = 0) {
       _database = FirebaseDatabase.DefaultInstance;
       _databaseReference = _database.RootReference;
 
-      var user = new User(id, username, password);
+      var user = new User(id, username, password, index);
       string json = JsonConvert.SerializeObject(user);
       _databaseReference.Child("Users")
         .Child(user.username)
