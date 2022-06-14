@@ -1790,7 +1790,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.14268257, g: 0.5, b: 0.016509444, a: 1}
+  m_Color: {r: 1, g: 0.6278376, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2032,7 +2032,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &505941977
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2075,8 +2075,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 1824329021}
   type: 0
-  _homeButton: {fileID: 0}
-  _additionalButton: {fileID: 0}
+  _homeButton: {fileID: 2072751510}
+  _additionalButton: {fileID: 1795802753}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -13027,7 +13027,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Next Level
+  m_text: Restart Level
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d008feb906d54544f8595bebb369fc69, type: 2}
   m_sharedMaterial: {fileID: -3631353001526623631, guid: d008feb906d54544f8595bebb369fc69, type: 2}
@@ -13054,7 +13054,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 66.95
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -14088,8 +14088,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 451623977}
   type: 0
-  _homeButton: {fileID: 0}
-  _additionalButton: {fileID: 0}
+  _homeButton: {fileID: 1564509993}
+  _additionalButton: {fileID: 496525426}
 --- !u!222 &1535711818
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16184,7 +16184,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: YOU WIN
+  m_text: YOU LOSE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c79747dadd5363345948d05d06a79e19, type: 2}
   m_sharedMaterial: {fileID: -1021795383877273608, guid: c79747dadd5363345948d05d06a79e19, type: 2}
@@ -16875,6 +16875,10 @@ PrefabInstance:
       propertyPath: _slider
       value: 
       objectReference: {fileID: 660337864}
+    - target: {fileID: 6501736087770433879, guid: 8cc00871febd3bd4cb7d16a1d5f933db, type: 3}
+      propertyPath: startingHealth
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 9143592207856857754, guid: 8cc00871febd3bd4cb7d16a1d5f933db, type: 3}
       propertyPath: m_RootOrder
       value: 2

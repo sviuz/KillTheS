@@ -11,6 +11,7 @@ using static Other.Constants.Constants;
 namespace Behaviour {
   public class PlayerMovement : SubjectParameters {
     public static Action<bool> OnSetMovement;
+    public static Action OnDeath;
     [SerializeField]
     private float _jumpForce = 7.5f;
     [SerializeField]
@@ -34,10 +35,12 @@ namespace Behaviour {
       _boxCollider = GetComponent<BoxCollider2D>();
 
       OnSetMovement += SetMovement;
+      OnDeath += Death;
     }
 
     private void OnDestroy() {
       OnSetMovement -= SetMovement;
+      OnDeath -= Death;
     }
 
     private void Update() {
@@ -123,12 +126,11 @@ namespace Behaviour {
       _animator.SetTrigger(nameof(MoveTriggers.Hurt));
     }
 
-    public void Death() {
+    private void Death() {
       _animator.SetTrigger(!_isDead
         ? nameof(MoveTriggers.Death)
         : nameof(MoveTriggers.Recover));
       _isDead = !_isDead;
-      LevelUI.Instance.Lose();
     }
 
     private void Jump() {

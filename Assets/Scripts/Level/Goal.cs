@@ -1,4 +1,5 @@
 ﻿using Core;
+using Other;
 
 namespace Level {
   public class Goal : Singleton<Goal> {
